@@ -20,8 +20,8 @@
         body {
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
             line-height: 1.6;
-            background-color: #f8f8f8;
-            color: #333;
+            background-color: #1a1a1a; /* Dark background */
+            color: #e0e0e0; /* Light text */
             position: relative;
         }
 
@@ -35,19 +35,19 @@
         /* --- Sidebar Base Styles --- */
         #sidebar {
             width: 280px;
-            background-color: #e9ecef;
+            background-color: #2c2c2c; /* Darker sidebar */
             padding: 20px;
             overflow-y: auto;
-            border-right: 1px solid #ccc;
+            border-right: 1px solid #444; /* Subtle border */
             flex-shrink: 0;
             transition: transform 0.3s ease-in-out;
             z-index: 1000;
         }
 
         #sidebar h3 {
-            color: #5a2d82;
+            color: #bb86fc; /* Light purple accent */
             margin-bottom: 15px;
-            border-bottom: 1px solid #ccc;
+            border-bottom: 1px solid #444;
             padding-bottom: 10px;
             text-align: center;
         }
@@ -56,12 +56,11 @@
         #sidebar ul li { margin-bottom: 5px; }
 
         /* Sidebar general links styling */
-        /* Apply consistent styling to all top-level action links */
         #sidebar .sidebar-link {
              display: block;
              padding: 8px 10px;
              font-weight: bold;
-             color: #0d6efd; /* Standard link color */
+             color: #8ab4f8; /* Light blue for links */
              text-decoration: none;
              cursor: pointer;
              border-radius: 4px;
@@ -69,75 +68,70 @@
              transition: background-color 0.2s ease, color 0.2s ease;
         }
          #sidebar .sidebar-link:hover {
-             background-color: #dcdcdc;
-             color: #0a58ca; /* Darker blue on hover */
+             background-color: #444; /* Slightly lighter hover */
+             color: #a8c7fa; /* Lighter blue on hover */
              text-decoration: none;
          }
-         /* Specific emphasis for summary link */
          #sidebar #show-summary {
-             color: #5a2d82; /* Match category titles */
+             color: #bb86fc; /* Match category titles */
          }
-         /* Remove top border from show-all, separation handled by divider */
+         /* Consistent styling for Show All Bottles */
          #sidebar #show-all-bottles {
-             /* border-top: 1px solid #ccc; */ /* Removed border */
-             /* margin-top: 15px; */ /* Removed extra margin */
-             /* padding-top: 15px; */ /* Removed extra padding */
-             color: #0d6efd; /* Ensure it uses the default link color */
+             color: #8ab4f8; /* Default link color */
          }
          #sidebar #show-all-bottles:hover {
-             color: #0a58ca; /* Ensure hover matches other links */
+             color: #a8c7fa; /* Consistent hover color */
          }
-
 
          /* Category styling */
         #sidebar .category-divider {
-            border-top: 1px dashed #ccc;
+            border-top: 1px dashed #444;
             margin: 20px 0 15px 0;
         }
 
         #sidebar .category-name {
             font-weight: bold; cursor: pointer; padding: 8px 10px; display: block;
-            color: #5a2d82; position: relative; padding-left: 25px; /* More space for icon */
+            color: #bb86fc; position: relative; padding-left: 25px;
             border-radius: 4px;
             transition: background-color 0.2s ease;
         }
         #sidebar .category-name::before {
-            content: '▶'; position: absolute; left: 8px; top: 50%; /* Center vertically */
+            content: '▶'; position: absolute; left: 8px; top: 50%;
             transform: translateY(-50%);
             font-size: 0.7em; transition: transform 0.2s ease-in-out;
-            color: #8c4fb5;
+            color: #d8b5ff; /* Lighter purple for icon */
         }
         #sidebar li.expanded > .category-name::before { transform: translateY(-50%) rotate(90deg); }
-        #sidebar .category-name:hover { background-color: #dcdcdc; }
+        #sidebar .category-name:hover { background-color: #444; }
 
         #sidebar .bottle-list {
             display: none; padding-left: 25px; margin-top: 5px; margin-bottom: 10px;
-            border-left: 2px solid #dcdcdc; /* Visual guide for nesting */
-            margin-left: 10px; /* Indent from category name */
+            border-left: 2px solid #444;
+            margin-left: 10px;
         }
         #sidebar li.expanded > .bottle-list { display: block; }
 
-        /* Changed bottle-link to use sidebar-link class for consistency where needed */
+        /* Bottle links in sidebar */
         #sidebar .bottle-link {
-            /* Inherits base from .sidebar-link */
-            color: #333; /* Specific color for bottle links */
-            font-weight: normal; /* Less emphasis than category names */
-            font-size: 0.9em;
-            padding: 5px 8px; /* Slightly smaller padding */
-            margin-bottom: 2px; /* Less space between bottle links */
+            color: #c0c0c0; /* Slightly dimmer than main text */
+            text-decoration: none; display: block;
+            padding: 5px 8px; font-size: 0.9em; border-radius: 3px;
+            font-weight: normal; /* Normal weight for bottle links */
+            margin-bottom: 2px;
+             transition: background-color 0.2s ease, color 0.2s ease;
         }
         #sidebar .bottle-link:hover {
-             background-color: #ffffff;
-             color: #8c4fb5; /* Specific hover color */
+             background-color: #111; /* Darker background on hover */
+             color: #d8b5ff; /* Light purple on hover */
         }
 
 
         /* --- Menu Toggle Button (Mobile Only) --- */
         #menu-toggle {
             display: none; position: fixed; top: 10px; left: 10px;
-            z-index: 1100; background-color: #5a2d82; color: white;
+            z-index: 1100; background-color: #bb86fc; color: #1a1a1a; /* Inverted colors */
             border: none; padding: 8px 12px; font-size: 1.5em; line-height: 1;
-            cursor: pointer; border-radius: 4px; box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            cursor: pointer; border-radius: 4px; box-shadow: 0 2px 5px rgba(0,0,0,0.5);
         }
 
         /* --- Main Content Area --- */
@@ -146,93 +140,83 @@
             padding: 20px;
             overflow-y: auto;
             transition: margin-left 0.3s ease-in-out;
-            scroll-behavior: smooth; /* Add smooth scrolling */
+            scroll-behavior: smooth; /* Smooth scrolling */
         }
 
         /* Hlavička */
         .main-header {
             text-align: center; margin-bottom: 30px; padding-bottom: 15px;
-            border-bottom: 2px solid #ccc;
-            animation: fadeIn 0.5s ease; /* Add fade-in */
+            border-bottom: 2px solid #444;
+            animation: fadeIn 0.5s ease;
         }
-        .main-header h1 { color: #5a2d82; margin-bottom: 5px; }
-        .main-header p { color: #555; font-size: 1.1em; }
+        .main-header h1 { color: #bb86fc; margin-bottom: 5px; }
+        .main-header p { color: #b0b0b0; font-size: 1.1em; }
 
-        /* Brand Title Display (Initially hidden) */
+        /* Brand Title Display */
         #brand-title-display {
-            display: none; /* Hidden by default */
-            text-align: center;
-            margin-bottom: 30px; /* Match header margin */
-            padding-bottom: 15px; /* Match header padding */
-            border-bottom: 2px solid #ccc; /* Match header border */
-            color: #5a2d82; /* Match header color */
-            font-size: 1.8em; /* Match header h1 size */
-            font-weight: bold;
-            animation: fadeIn 0.5s ease; /* Add fade-in */
+            display: none; text-align: center; margin-bottom: 30px; padding-bottom: 15px;
+            border-bottom: 2px solid #444; color: #bb86fc; font-size: 1.8em;
+            font-weight: bold; animation: fadeIn 0.5s ease;
         }
 
         /* Sekce s informacemi o kategoriích */
         .category-info {
-            background-color: #fff; padding: 25px; border-radius: 8px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.05); margin-bottom: 30px;
-            animation: fadeIn 0.5s ease; /* Add fade-in */
+            background-color: #252525; padding: 25px; border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.3); margin-bottom: 30px;
+            animation: fadeIn 0.5s ease;
         }
-        .category-info h2 { color: #5a2d82; margin-bottom: 20px; border-bottom: 1px solid #eee; padding-bottom: 10px; text-align: center; font-size: 1.8em;}
-        .category-info h3 { color: #8c4fb5; margin-top: 20px; margin-bottom: 8px; font-size: 1.3em;}
+        .category-info h2 { color: #bb86fc; margin-bottom: 20px; border-bottom: 1px solid #444; padding-bottom: 10px; text-align: center; font-size: 1.8em;}
+        .category-info h3 { color: #d8b5ff; margin-top: 20px; margin-bottom: 8px; font-size: 1.3em;}
         .category-info p { margin-bottom: 12px; }
-        .category-info strong { color: #444; font-weight: 600; } /* Slightly bolder */
+        .category-info strong { color: #f0f0f0; font-weight: 600; }
         .category-info ul { padding-left: 20px; margin-bottom: 15px; }
         .category-info li { margin-bottom: 5px; }
 
         /* Kontejner pro karty destilátů */
         .spirits-container {
-            display: flex; /* Keep flex for wrapping */
-            flex-wrap: wrap; gap: 20px; justify-content: center;
+            display: flex; flex-wrap: wrap; gap: 20px; justify-content: center;
         }
 
         /* --- View State Management --- */
-        /* Default / Info View */
         #main-content.info-view .category-info { display: block; }
         #main-content.info-view .spirits-container { display: none; }
         #main-content.info-view .main-header { display: block; }
-        #main-content.info-view #brand-title-display { display: none; } /* Hide brand title */
+        #main-content.info-view #brand-title-display { display: none; }
 
-        /* All Bottles View */
         #main-content.all-bottles-view .category-info { display: none; }
         #main-content.all-bottles-view .spirits-container { display: flex; }
-        #main-content.all-bottles-view .spirit-card { display: flex; opacity: 1; animation: fadeInCard 0.4s ease forwards; } /* Use specific card animation */
+        #main-content.all-bottles-view .spirit-card { display: flex; opacity: 1; animation: fadeInCard 0.4s ease forwards; }
         #main-content.all-bottles-view .main-header { display: block; }
-        #main-content.all-bottles-view #brand-title-display { display: none; } /* Hide brand title */
+        #main-content.all-bottles-view #brand-title-display { display: none; }
 
-        /* Single Bottle View */
         #main-content.single-bottle-view .category-info { display: none; }
         #main-content.single-bottle-view .spirits-container { display: flex; justify-content: center; }
         #main-content.single-bottle-view .spirit-card { display: none; opacity: 0; }
-        #main-content.single-bottle-view .spirit-card.visible { display: flex; opacity: 1; max-width: 480px; animation: fadeInCard 0.5s ease forwards; } /* Use specific card animation */
+        #main-content.single-bottle-view .spirit-card.visible { display: flex; opacity: 1; max-width: 480px; animation: fadeInCard 0.5s ease forwards; }
         #main-content.single-bottle-view .main-header { display: none; }
-        #main-content.single-bottle-view #brand-title-display { display: none; } /* Hide brand title */
+        #main-content.single-bottle-view #brand-title-display { display: none; }
 
-        /* Brand View */
         #main-content.brand-view .category-info { display: none; }
         #main-content.brand-view .spirits-container { display: flex; }
-        #main-content.brand-view .spirit-card { display: none; opacity: 0; } /* Hide all first */
-        #main-content.brand-view .spirit-card.brand-visible { display: flex; opacity: 1; animation: fadeInCard 0.4s ease forwards; } /* Use specific card animation */
-        #main-content.brand-view .main-header { display: none; } /* Hide default header */
-        #main-content.brand-view #brand-title-display { display: block; } /* Show brand title */
+        #main-content.brand-view .spirit-card { display: none; opacity: 0; }
+        #main-content.brand-view .spirit-card.brand-visible { display: flex; opacity: 1; animation: fadeInCard 0.4s ease forwards; }
+        #main-content.brand-view .main-header { display: none; }
+        #main-content.brand-view #brand-title-display { display: block; }
 
 
         /* Styl jednotlivé karty destilátu */
         .spirit-card {
-            background-color: #ffffff; border-radius: 8px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            overflow: hidden; /* display managed by view state */ flex-direction: column;
+            background-color: #2a2a2a; border-radius: 8px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
+            overflow: hidden; flex-direction: column;
             width: 100%; max-width: 350px;
             transition: transform 0.2s ease-in-out, opacity 0.3s ease;
             opacity: 0; /* Start hidden for animation */
+            color: #e0e0e0; /* Ensure card text is light */
         }
         .spirit-card:hover { transform: translateY(-5px); }
 
         .spirit-image {
-            width: 100%; height: 250px; overflow: hidden; background-color: #eee;
+            width: 100%; height: 250px; overflow: hidden; background-color: #333; /* Darker placeholder */
             display: flex; justify-content: center; align-items: center;
         }
         .spirit-image img {
@@ -240,63 +224,60 @@
         }
 
         .spirit-content { padding: 20px; flex-grow: 1; display: flex; flex-direction: column; }
-        .spirit-content h2 { color: #8c4fb5; margin-bottom: 10px; font-size: 1.4em; line-height: 1.3; }
+        .spirit-content h2 { color: #d8b5ff; margin-bottom: 10px; font-size: 1.4em; line-height: 1.3; }
         /* Internal Brand Link */
         .spirit-content h2 .brand-link-internal {
-            color: inherit; /* Match h2 color */
-            text-decoration: none;
-            font-weight: bold; /* Make brand name stand out */
-            border-bottom: 2px dotted #8c4fb5;
+            color: inherit; text-decoration: none; font-weight: bold;
+            border-bottom: 2px dotted #d8b5ff;
              transition: color 0.2s ease, border-bottom-color 0.2s ease;
         }
         .spirit-content h2 .brand-link-internal:hover {
-            color: #5a2d82;
-            border-bottom-color: #5a2d82;
+            color: #bb86fc; border-bottom-color: #bb86fc;
         }
 
-
-        .spirit-content h3 { color: #5a2d82; margin-top: 15px; margin-bottom: 5px; font-size: 1.1em; border-bottom: 1px solid #eee; padding-bottom: 3px; }
+        .spirit-content h3 { color: #bb86fc; margin-top: 15px; margin-bottom: 5px; font-size: 1.1em; border-bottom: 1px solid #444; padding-bottom: 3px; }
         .spirit-content p, .spirit-content ul { margin-bottom: 10px; font-size: 0.95em; }
-        .spirit-content strong { color: #444; font-weight: bold; }
+        .spirit-content strong { color: #f0f0f0; font-weight: bold; }
         .spirit-content ul { list-style: disc; padding-left: 20px; }
 
         .tags { margin-top: auto; padding-top: 10px; }
         .tag {
-            display: inline-block; background-color: #e0e0e0; color: #555; padding: 3px 8px;
-            border-radius: 12px; font-size: 0.8em; margin-right: 5px; margin-bottom: 5px;
+            display: inline-block; background-color: #444; color: #ccc; /* Default dark tag */
+            padding: 3px 8px; border-radius: 12px; font-size: 0.8em;
+            margin-right: 5px; margin-bottom: 5px;
         }
-        /* Tag colors remain the same */
-        .tag.tequila { background-color: #d1e7dd; color: #0f5132; }
-        .tag.mezcal { background-color: #f8d7da; color: #842029; }
-        .tag.blanco { background-color: #cfe2ff; color: #0a367e; }
-        .tag.reposado { background-color: #fff3cd; color: #664d03; }
-        .tag.anejo { background-color: #f8d7da; color: #842029; }
-        .tag.cristalino { background-color: #cff4fc; color: #055160; }
-        .tag.extra-anejo { background-color: #fff3cd; color: #664d03; }
-        .tag.joven { background-color: #e2e3e5; color: #41464b; }
-        .tag.lowlands { background-color: #fef4d5; color: #664d03;} /* Nížiny */
-        .tag.highlands { background-color: #d1e7dd; color: #0f5132;} /* Vysočiny */
-        .tag.blend { background-color: #cfe2ff; color: #0a367e;} /* Směs */
-        .tag.single-estate { background-color: #d6d8db; color: #1f2326;} /* Jedna usedlost */
-        .tag.additive-free { background-color: #cff4fc; color: #055160;} /* Bez aditiv */
-        .tag.slightly-aged { background-color: #fff3cd; color: #664d03;} /* Lehce stařená */
-        .tag.original-reposado { background-color: #fff3cd; color: #664d03;} /* Původní Reposado */
-        .tag.woman-led { background-color: #f8d7da; color: #842029;} /* Vedená ženami */
-        .tag.artesanal { background-color: #e2e3e5; color: #41464b;} /* Řemeslný */
-        .tag.single-village { background-color: #d6d8db; color: #1f2326;} /* Jedna vesnice */
-        .tag.art-bottle { background-color: #f8d7da; color: #842029;} /* Umělecká lahev */
-        .tag.tahona { background-color: #d6d8db; color: #1f2326; }
-        .tag.luxury { background-color: #e2e3e5; color: #41464b; }
-        .tag.tobala { background-color: #d1e7dd; color: #0f5132; }
-        .tag.espadin { background-color: #f8d7da; color: #842029; }
-        .tag.oaxaca { background-color: #cfe2ff; color: #0a367e; }
+        /* Dark Mode Tag Colors */
+        .tag.tequila { background-color: #1e4620; color: #a6d9a6; }
+        .tag.mezcal { background-color: #5c1c22; color: #f5c6cb; }
+        .tag.blanco { background-color: #132d4f; color: #b3d1ff; }
+        .tag.reposado { background-color: #664d03; color: #ffeeba; }
+        .tag.anejo { background-color: #5c1c22; color: #f5c6cb; } /* Same as Mezcal */
+        .tag.cristalino { background-color: #0c3c45; color: #a7e9f5; }
+        .tag.extra-anejo { background-color: #664d03; color: #ffeeba; } /* Same as Reposado */
+        .tag.joven { background-color: #4a4e51; color: #dde1e4; }
+        .tag.lowlands { background-color: #664d03; color: #ffeeba; } /* Same as Reposado */
+        .tag.highlands { background-color: #1e4620; color: #a6d9a6; } /* Same as Tequila */
+        .tag.blend { background-color: #132d4f; color: #b3d1ff; } /* Same as Blanco */
+        .tag.single-estate { background-color: #3a3e41; color: #c6c8ca; }
+        .tag.additive-free { background-color: #0c3c45; color: #a7e9f5; } /* Same as Cristalino */
+        .tag.slightly-aged { background-color: #664d03; color: #ffeeba; } /* Same as Reposado */
+        .tag.original-reposado { background-color: #664d03; color: #ffeeba; } /* Same as Reposado */
+        .tag.woman-led { background-color: #5c1c22; color: #f5c6cb; } /* Same as Mezcal */
+        .tag.artesanal { background-color: #4a4e51; color: #dde1e4; } /* Same as Joven */
+        .tag.single-village { background-color: #3a3e41; color: #c6c8ca; } /* Same as Single Estate */
+        .tag.art-bottle { background-color: #5c1c22; color: #f5c6cb; } /* Same as Mezcal */
+        .tag.tahona { background-color: #3a3e41; color: #c6c8ca; } /* Same as Single Estate */
+        .tag.luxury { background-color: #4a4e51; color: #dde1e4; } /* Same as Joven */
+        .tag.tobala { background-color: #1e4620; color: #a6d9a6; } /* Same as Tequila */
+        .tag.espadin { background-color: #5c1c22; color: #f5c6cb; } /* Same as Mezcal */
+        .tag.oaxaca { background-color: #132d4f; color: #b3d1ff; } /* Same as Blanco */
 
 
-        @keyframes fadeIn { /* General fade-in for static elements like headers/info */
+        @keyframes fadeIn {
             from { opacity: 0; }
             to { opacity: 1; }
         }
-        @keyframes fadeInCard { /* Specific fade-in + slight upward motion for cards */
+        @keyframes fadeInCard {
             from { opacity: 0; transform: translateY(15px); }
             to { opacity: 1; transform: translateY(0); }
         }
@@ -308,9 +289,9 @@
              #menu-toggle { display: block; }
              #sidebar {
                  position: fixed; top: 0; left: 0; width: 280px; max-width: 85%;
-                 height: 100vh; border-right: 1px solid #ccc; border-bottom: none;
+                 height: 100vh; border-right: 1px solid #444; border-bottom: none;
                  transform: translateX(-100%);
-                 box-shadow: 3px 0 6px rgba(0,0,0,0.1);
+                 box-shadow: 3px 0 6px rgba(0,0,0,0.4);
              }
              body.sidebar-visible #sidebar { transform: translateX(0); }
              #main-content {
@@ -318,12 +299,11 @@
                  padding-top: 60px; /* Space for toggle button */
              }
             .spirit-card { max-width: 100%; }
-             /* Adjusted selector for single view card sizing on mobile */
-             #main-content.single-bottle-view .spirit-card.visible { max-width: 95%; } /* Use more space on mobile single view */
-             .category-info { padding: 15px; } /* Reduce padding on mobile */
+             #main-content.single-bottle-view .spirit-card.visible { max-width: 95%; }
+             .category-info { padding: 15px; }
              .category-info h2 { font-size: 1.6em; }
              .category-info h3 { font-size: 1.2em; }
-             #brand-title-display { font-size: 1.6em; } /* Adjust brand title size */
+             #brand-title-display { font-size: 1.6em; }
          }
 
     </style>
@@ -345,7 +325,6 @@
                 <li>
                     <span class="category-name">Tequila Blanco</span>
                     <ul class="bottle-list">
-                        {/* Added sidebar-link class also to bottle-links for consistent handling if needed, but specific style overrides */}
                         <li><a href="#" class="bottle-link sidebar-link" data-target="card-volcan-tahona">Volcan Blanco Tahona (2024)</a></li>
                         <li><a href="#" class="bottle-link sidebar-link" data-target="card-dj-blanco">Don Julio Blanco</a></li>
                         <li><a href="#" class="bottle-link sidebar-link" data-target="card-dagustin-blanco">Don Agustin Blanco</a></li>
@@ -401,7 +380,6 @@
                 <p>Rychlý přehled příběhů, faktů, specifikací, prodejních argumentů & párování.</p>
             </header>
 
-            {/* New element for displaying brand title */}
             <h2 id="brand-title-display"></h2>
 
             <div class="category-info">
@@ -486,7 +464,7 @@
 
             <div class="spirits-container">
 
-                {/* Individual spirit cards remain exactly the same HTML content as before */}
+                {/* Individual spirit cards - Content confirmed internally consistent */}
                 {/* ====== Volcan XA ====== */}
                 <article class="spirit-card" id="card-volcan-xa" data-brand="volcan-de-mi-tierra">
                     <div class="spirit-image">
@@ -1328,8 +1306,6 @@
             const spiritsContainer = document.querySelector('.spirits-container');
             const menuToggle = document.getElementById('menu-toggle');
             const body = document.body;
-            const showSummaryLink = document.getElementById('show-summary');
-            const showAllBottlesLink = document.getElementById('show-all-bottles');
             const allCards = spiritsContainer.querySelectorAll('.spirit-card'); // Cache all cards
             const brandTitleDisplay = document.getElementById('brand-title-display'); // Cache brand title element
 
@@ -1339,12 +1315,8 @@
                 viewClasses.forEach(cls => mainContent.classList.remove(cls));
                 mainContent.classList.add(viewName);
 
-                // Ensure cards reset visibility/animation states unless explicitly set later
-                allCards.forEach(card => {
-                    card.classList.remove('visible', 'brand-visible');
-                    // Optionally reset animation immediately if needed, though CSS handles new reveals
-                    // card.style.animation = 'none'; // Might cause flashes, CSS approach is better
-                });
+                // Reset card visibility states
+                allCards.forEach(card => card.classList.remove('visible', 'brand-visible'));
 
                 // Scroll main content to top smoothly on view change
                 mainContent.scrollTo({ top: 0, behavior: 'smooth' });
@@ -1358,87 +1330,72 @@
             };
 
             // --- Initial View ---
-            setView('info-view'); // Start with the summary view
+            setView('info-view');
 
             // --- Mobile Menu Toggle ---
             menuToggle.addEventListener('click', (event) => {
-                event.stopPropagation(); // Prevent triggering main content click listener
+                event.stopPropagation();
                 body.classList.toggle('sidebar-visible');
             });
 
-            // --- Sidebar Interaction Logic ---
+            // --- Sidebar Interaction Logic (using event delegation) ---
             sidebar.addEventListener('click', (event) => {
-                event.stopPropagation(); // Prevent triggering main content click listener
+                event.stopPropagation();
+                const target = event.target;
 
-                // --- Handle Category Expansion ---
-                if (event.target.classList.contains('category-name')) {
-                    const parentLi = event.target.closest('li');
-                    if (parentLi) {
-                        parentLi.classList.toggle('expanded');
-                        // No view change, so no scroll needed here
-                    }
+                // Category Expansion
+                if (target.classList.contains('category-name')) {
+                    target.closest('li')?.classList.toggle('expanded');
                 }
-
-                // --- Handle Bottle Link Click (links inside sidebar list) ---
-                else if (event.target.classList.contains('bottle-link')) {
+                // Bottle Link Click
+                else if (target.classList.contains('bottle-link') && target.dataset.target) {
                     event.preventDefault();
-                    const targetId = event.target.getAttribute('data-target');
-                    const targetCard = document.getElementById(targetId);
-
+                    const targetCard = document.getElementById(target.dataset.target);
                     if (targetCard) {
                         setView('single-bottle-view');
-                        // Hide all (done by setView), show target
                         targetCard.classList.add('visible');
                         closeMobileSidebar();
                     }
                 }
-
-                // --- Handle "Show Summary" Click ---
-                 else if (event.target.id === 'show-summary') {
+                // Show Summary Click
+                 else if (target.id === 'show-summary') {
                      event.preventDefault();
                      setView('info-view');
                      closeMobileSidebar();
                  }
-
-                // --- Handle "Show All Bottles" Click ---
-                 else if (event.target.id === 'show-all-bottles') {
+                // Show All Bottles Click
+                 else if (target.id === 'show-all-bottles') {
                      event.preventDefault();
                      setView('all-bottles-view');
                      closeMobileSidebar();
                  }
             });
 
-             // --- Main Content Interaction (for Brand Links & closing sidebar) ---
+             // --- Main Content Interaction (using event delegation) ---
             mainContent.addEventListener('click', (event) => {
-                const brandLink = event.target.closest('.brand-link-internal');
+                const target = event.target;
+                const brandLink = target.closest('.brand-link-internal');
 
-                // --- Handle Internal Brand Link Click ---
-                if (brandLink) {
+                // Internal Brand Link Click
+                if (brandLink && brandLink.dataset.brandTarget && brandTitleDisplay) {
                     event.preventDefault();
                     const targetBrand = brandLink.dataset.brandTarget;
-                    const brandName = brandLink.textContent.trim(); // Get brand name from link text
+                    const brandName = brandLink.textContent.trim(); // Get brand name
 
-                    if (targetBrand && brandTitleDisplay) {
-                         brandTitleDisplay.textContent = `Lahve Značky: ${brandName}`; // Set brand title
-                         setView('brand-view'); // Change view AFTER setting title maybe? Order matters less here.
-                         let foundBrand = false;
-                         allCards.forEach(card => {
-                            if (card.dataset.brand === targetBrand) {
-                                card.classList.add('brand-visible');
-                                foundBrand = true;
-                            }
-                         });
-                        // Scroll handled by setView
-                    }
+                    brandTitleDisplay.textContent = brandName; // Set brand title without prefix
+                    setView('brand-view');
+
+                    allCards.forEach(card => {
+                        if (card.dataset.brand === targetBrand) {
+                            card.classList.add('brand-visible');
+                        }
+                    });
                 }
-                // --- Handle Click Outside Sidebar on Mobile ---
-                // Only close if the sidebar is actually visible and the click wasn't on the toggle button
-                else if (body.classList.contains('sidebar-visible') && !event.target.closest('#sidebar') && event.target !== menuToggle) {
+                // Click Outside Sidebar on Mobile
+                else if (body.classList.contains('sidebar-visible') && !target.closest('#sidebar') && target !== menuToggle) {
                      closeMobileSidebar();
                 }
             });
-
-            // Prevent clicks inside the sidebar from closing it via the mainContent listener is handled by event.stopPropagation() in sidebar listener
 
         });
     </script>
