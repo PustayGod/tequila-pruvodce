@@ -56,11 +56,12 @@
         #sidebar ul li { margin-bottom: 5px; }
 
         /* Sidebar general links styling */
+        /* Apply consistent styling to all top-level action links */
         #sidebar .sidebar-link {
              display: block;
              padding: 8px 10px;
              font-weight: bold;
-             color: #0d6efd;
+             color: #0d6efd; /* Standard link color */
              text-decoration: none;
              cursor: pointer;
              border-radius: 4px;
@@ -69,18 +70,24 @@
         }
          #sidebar .sidebar-link:hover {
              background-color: #dcdcdc;
-             color: #0a58ca;
+             color: #0a58ca; /* Darker blue on hover */
              text-decoration: none;
          }
+         /* Specific emphasis for summary link */
          #sidebar #show-summary {
-             /* Specific styles if needed */
              color: #5a2d82; /* Match category titles */
          }
+         /* Remove top border from show-all, separation handled by divider */
          #sidebar #show-all-bottles {
-             border-top: 1px solid #ccc;
-             margin-top: 15px;
-             padding-top: 15px;
+             /* border-top: 1px solid #ccc; */ /* Removed border */
+             /* margin-top: 15px; */ /* Removed extra margin */
+             /* padding-top: 15px; */ /* Removed extra padding */
+             color: #0d6efd; /* Ensure it uses the default link color */
          }
+         #sidebar #show-all-bottles:hover {
+             color: #0a58ca; /* Ensure hover matches other links */
+         }
+
 
          /* Category styling */
         #sidebar .category-divider {
@@ -110,12 +117,19 @@
         }
         #sidebar li.expanded > .bottle-list { display: block; }
 
+        /* Changed bottle-link to use sidebar-link class for consistency where needed */
         #sidebar .bottle-link {
-            color: #333; text-decoration: none; display: block;
-            padding: 5px 8px; font-size: 0.9em; border-radius: 3px;
-             transition: background-color 0.2s ease, color 0.2s ease;
+            /* Inherits base from .sidebar-link */
+            color: #333; /* Specific color for bottle links */
+            font-weight: normal; /* Less emphasis than category names */
+            font-size: 0.9em;
+            padding: 5px 8px; /* Slightly smaller padding */
+            margin-bottom: 2px; /* Less space between bottle links */
         }
-        #sidebar .bottle-link:hover { background-color: #ffffff; color: #8c4fb5; }
+        #sidebar .bottle-link:hover {
+             background-color: #ffffff;
+             color: #8c4fb5; /* Specific hover color */
+        }
 
 
         /* --- Menu Toggle Button (Mobile Only) --- */
@@ -132,20 +146,36 @@
             padding: 20px;
             overflow-y: auto;
             transition: margin-left 0.3s ease-in-out;
+            scroll-behavior: smooth; /* Add smooth scrolling */
         }
 
         /* Hlavička */
         .main-header {
             text-align: center; margin-bottom: 30px; padding-bottom: 15px;
             border-bottom: 2px solid #ccc;
+            animation: fadeIn 0.5s ease; /* Add fade-in */
         }
         .main-header h1 { color: #5a2d82; margin-bottom: 5px; }
         .main-header p { color: #555; font-size: 1.1em; }
+
+        /* Brand Title Display (Initially hidden) */
+        #brand-title-display {
+            display: none; /* Hidden by default */
+            text-align: center;
+            margin-bottom: 30px; /* Match header margin */
+            padding-bottom: 15px; /* Match header padding */
+            border-bottom: 2px solid #ccc; /* Match header border */
+            color: #5a2d82; /* Match header color */
+            font-size: 1.8em; /* Match header h1 size */
+            font-weight: bold;
+            animation: fadeIn 0.5s ease; /* Add fade-in */
+        }
 
         /* Sekce s informacemi o kategoriích */
         .category-info {
             background-color: #fff; padding: 25px; border-radius: 8px;
             box-shadow: 0 2px 4px rgba(0,0,0,0.05); margin-bottom: 30px;
+            animation: fadeIn 0.5s ease; /* Add fade-in */
         }
         .category-info h2 { color: #5a2d82; margin-bottom: 20px; border-bottom: 1px solid #eee; padding-bottom: 10px; text-align: center; font-size: 1.8em;}
         .category-info h3 { color: #8c4fb5; margin-top: 20px; margin-bottom: 8px; font-size: 1.3em;}
@@ -164,27 +194,31 @@
         /* Default / Info View */
         #main-content.info-view .category-info { display: block; }
         #main-content.info-view .spirits-container { display: none; }
-        #main-content.info-view .main-header { display: block; } /* Show header in info view */
+        #main-content.info-view .main-header { display: block; }
+        #main-content.info-view #brand-title-display { display: none; } /* Hide brand title */
 
         /* All Bottles View */
         #main-content.all-bottles-view .category-info { display: none; }
         #main-content.all-bottles-view .spirits-container { display: flex; }
-        #main-content.all-bottles-view .spirit-card { display: flex; opacity: 1; animation: fadeIn 0.3s ease; }
-        #main-content.all-bottles-view .main-header { display: block; } /* Show header */
+        #main-content.all-bottles-view .spirit-card { display: flex; opacity: 1; animation: fadeInCard 0.4s ease forwards; } /* Use specific card animation */
+        #main-content.all-bottles-view .main-header { display: block; }
+        #main-content.all-bottles-view #brand-title-display { display: none; } /* Hide brand title */
 
         /* Single Bottle View */
         #main-content.single-bottle-view .category-info { display: none; }
         #main-content.single-bottle-view .spirits-container { display: flex; justify-content: center; }
         #main-content.single-bottle-view .spirit-card { display: none; opacity: 0; }
-        #main-content.single-bottle-view .spirit-card.visible { display: flex; opacity: 1; max-width: 480px; animation: fadeIn 0.5s ease; } /* Slightly wider single card */
-        #main-content.single-bottle-view .main-header { display: none; } /* Hide header */
+        #main-content.single-bottle-view .spirit-card.visible { display: flex; opacity: 1; max-width: 480px; animation: fadeInCard 0.5s ease forwards; } /* Use specific card animation */
+        #main-content.single-bottle-view .main-header { display: none; }
+        #main-content.single-bottle-view #brand-title-display { display: none; } /* Hide brand title */
 
         /* Brand View */
         #main-content.brand-view .category-info { display: none; }
         #main-content.brand-view .spirits-container { display: flex; }
         #main-content.brand-view .spirit-card { display: none; opacity: 0; } /* Hide all first */
-        #main-content.brand-view .spirit-card.brand-visible { display: flex; opacity: 1; animation: fadeIn 0.3s ease; } /* Show matching brand */
-        #main-content.brand-view .main-header { display: block; } /* Show header */
+        #main-content.brand-view .spirit-card.brand-visible { display: flex; opacity: 1; animation: fadeInCard 0.4s ease forwards; } /* Use specific card animation */
+        #main-content.brand-view .main-header { display: none; } /* Hide default header */
+        #main-content.brand-view #brand-title-display { display: block; } /* Show brand title */
 
 
         /* Styl jednotlivé karty destilátu */
@@ -193,6 +227,7 @@
             overflow: hidden; /* display managed by view state */ flex-direction: column;
             width: 100%; max-width: 350px;
             transition: transform 0.2s ease-in-out, opacity 0.3s ease;
+            opacity: 0; /* Start hidden for animation */
         }
         .spirit-card:hover { transform: translateY(-5px); }
 
@@ -230,6 +265,7 @@
             display: inline-block; background-color: #e0e0e0; color: #555; padding: 3px 8px;
             border-radius: 12px; font-size: 0.8em; margin-right: 5px; margin-bottom: 5px;
         }
+        /* Tag colors remain the same */
         .tag.tequila { background-color: #d1e7dd; color: #0f5132; }
         .tag.mezcal { background-color: #f8d7da; color: #842029; }
         .tag.blanco { background-color: #cfe2ff; color: #0a367e; }
@@ -256,8 +292,12 @@
         .tag.oaxaca { background-color: #cfe2ff; color: #0a367e; }
 
 
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
+        @keyframes fadeIn { /* General fade-in for static elements like headers/info */
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        @keyframes fadeInCard { /* Specific fade-in + slight upward motion for cards */
+            from { opacity: 0; transform: translateY(15px); }
             to { opacity: 1; transform: translateY(0); }
         }
 
@@ -278,10 +318,12 @@
                  padding-top: 60px; /* Space for toggle button */
              }
             .spirit-card { max-width: 100%; }
-             #main-content.single-view .spirit-card { max-width: 95%; } /* Use more space on mobile single view */
+             /* Adjusted selector for single view card sizing on mobile */
+             #main-content.single-bottle-view .spirit-card.visible { max-width: 95%; } /* Use more space on mobile single view */
              .category-info { padding: 15px; } /* Reduce padding on mobile */
              .category-info h2 { font-size: 1.6em; }
              .category-info h3 { font-size: 1.2em; }
+             #brand-title-display { font-size: 1.6em; } /* Adjust brand title size */
          }
 
     </style>
@@ -303,6 +345,7 @@
                 <li>
                     <span class="category-name">Tequila Blanco</span>
                     <ul class="bottle-list">
+                        {/* Added sidebar-link class also to bottle-links for consistent handling if needed, but specific style overrides */}
                         <li><a href="#" class="bottle-link sidebar-link" data-target="card-volcan-tahona">Volcan Blanco Tahona (2024)</a></li>
                         <li><a href="#" class="bottle-link sidebar-link" data-target="card-dj-blanco">Don Julio Blanco</a></li>
                         <li><a href="#" class="bottle-link sidebar-link" data-target="card-dagustin-blanco">Don Agustin Blanco</a></li>
@@ -352,13 +395,15 @@
         </aside>
 
         <main id="main-content">
-    
+
             <header class="main-header">
                 <h1>Průvodce Agávovými Destiláty pro Obsluhu</h1>
                 <p>Rychlý přehled příběhů, faktů, specifikací, prodejních argumentů & párování.</p>
             </header>
 
-       
+            {/* New element for displaying brand title */}
+            <h2 id="brand-title-display"></h2>
+
             <div class="category-info">
                 <h2>Shrnutí & Kategorie Agávových Destilátů</h2>
                 <p>Vítejte v průvodci světem tequily a mezcalu! Níže najdete základní informace o jednotlivých typech a jejich charakteristikách, které vám pomohou s výběrem a doporučením pro hosty.</p>
@@ -438,19 +483,17 @@
                  </ul>
             </div>
 
-            
+
             <div class="spirits-container">
 
-    
-
-                <!-- ====== Volcan XA ====== -->
+                {/* Individual spirit cards remain exactly the same HTML content as before */}
+                {/* ====== Volcan XA ====== */}
                 <article class="spirit-card" id="card-volcan-xa" data-brand="volcan-de-mi-tierra">
                     <div class="spirit-image">
                         <img src="https://www.excaliburshop.com/uploads/item/10505/template/108/images/0-tequila-volcan-de-mi-tierra-x-a-0-7l-40-darkove-baleni-102823.jpg" alt="Lahev Volcan XA">
                     </div>
                     <div class="spirit-content">
                         <h2><a href="#" class="brand-link-internal" data-brand-target="volcan-de-mi-tierra">Volcan De Mi Tierra</a> X.A (2022)</h2>
-                        {/* Rest of the content remains the same */}
                          <h3>Příběh & Fakta</h3>
                         <p>Pojmenováno po sopce Tequila poblíž lihovaru. X.A znamená "Extra Ages" (Extra Stařené). Směs tequil Reposado, Añejo a Extra-Añejo, vytvářející komplexní Joven výraz. Zaměřuje se na terroir (agáve z Vysočiny a Nížin). Partnerství mezi Moët Hennessy a rodinou Gallardo.</p>
                         <h3>Technické Parametry</h3>
@@ -480,7 +523,7 @@
                     </div>
                 </article>
 
-                <!-- ====== Volcan Cristalino ====== -->
+                {/* ====== Volcan Cristalino ====== */}
                 <article class="spirit-card" id="card-volcan-cristalino" data-brand="volcan-de-mi-tierra">
                     <div class="spirit-image">
                          <img src="https://img.thewhiskyexchange.com/540/teqla_vol5.jpg" alt="Lahev Volcan Cristalino">
@@ -516,7 +559,7 @@
                     </div>
                 </article>
 
-                <!-- ====== Volcan Blanco Tahona (2024) ====== -->
+                {/* ====== Volcan Blanco Tahona (2024) ====== */}
                 <article class="spirit-card" id="card-volcan-tahona" data-brand="volcan-de-mi-tierra">
                     <div class="spirit-image">
                         <img src="https://www.kuinak.com/system/base_product_images/images/000/031/277/detail/volcan-de-mi-tierra-blanco-tahona-1.jpg?1719534360" alt="Lahev Volcan Blanco Tahona">
@@ -553,7 +596,7 @@
                     </div>
                 </article>
 
-                 <!-- ====== Don Julio Blanco ====== -->
+                 {/* ====== Don Julio Blanco ====== */}
                 <article class="spirit-card" id="card-dj-blanco" data-brand="don-julio">
                     <div class="spirit-image">
                         <img src="https://www.heinemann-shop.com/medias/527Wx527H-null?context=bWFzdGVyfGltYWdlc3w1Njc5M3xpbWFnZS9qcGVnfGFEQm1MMmczTlM4eE1USTRORGswTmpjME56UXlNaTgxTWpkWGVEVXlOMGhmYm5Wc2JBfDJjZDZiZGMwNzhjZDVkY2YxYTQxYmQ5YjY0ZjkzMGJlYzdlMTRjZjk0ZDE3YzlmMTU1MTkxMzQ4ODc5Mjk2ZTg&v=1729304248560" alt="Lahev Don Julio Blanco">
@@ -589,7 +632,7 @@
                     </div>
                 </article>
 
-                <!-- ====== Don Julio Reposado ====== -->
+                {/* ====== Don Julio Reposado ====== */}
                 <article class="spirit-card" id="card-dj-reposado" data-brand="don-julio">
                     <div class="spirit-image">
                         <img src="https://cdn.myshoptet.com/usr/www.topalkohol.cz/user/shop/big/28092_don-julio-reposado-40--0-05l.jpg?67bf1cc9" alt="Lahev Don Julio Reposado">
@@ -624,7 +667,7 @@
                     </div>
                 </article>
 
-                <!-- ====== Don Julio Añejo ====== -->
+                {/* ====== Don Julio Añejo ====== */}
                 <article class="spirit-card" id="card-dj-anejo" data-brand="don-julio">
                     <div class="spirit-image">
                         <img src="https://www.alkohol.cz/images/upload/1738568478navrh-bez-nazvu-2025-02-03t084019.999.jpg" alt="Lahev Don Julio Añejo">
@@ -659,7 +702,7 @@
                     </div>
                 </article>
 
-                <!-- ====== Don Julio 1942 ====== -->
+                {/* ====== Don Julio 1942 ====== */}
                 <article class="spirit-card" id="card-dj-1942" data-brand="don-julio">
                     <div class="spirit-image">
                         <img src="https://cdn.myshoptet.com/usr/www.stramis.cz/user/shop/big/80808_don-julio-1942-38--0-7l.jpg?62b713d0" alt="Lahev Don Julio 1942">
@@ -695,7 +738,7 @@
                     </div>
                 </article>
 
-                <!-- ====== Don Agustin Blanco ====== -->
+                {/* ====== Don Agustin Blanco ====== */}
                 <article class="spirit-card" id="card-dagustin-blanco" data-brand="don-agustin">
                     <div class="spirit-image">
                         <img src="https://img-cdn.heureka.group/v1/1d85d7bb-1b5e-48fa-9ee2-19e8ebabc7fd.jpg?width=400&height=400" alt="Lahev Don Agustin Blanco">
@@ -729,7 +772,7 @@
                     </div>
                 </article>
 
-                 <!-- ====== Ocho Blanco 2022 ====== -->
+                 {/* ====== Ocho Blanco 2022 ====== */}
                 <article class="spirit-card" id="card-ocho-blanco" data-brand="ocho">
                     <div class="spirit-image">
                         <img src="https://cdn.myshoptet.com/usr/eshop.angelshare.cz/user/shop/big/88455-1_muestra-ocho-no-8-cerro-del-gallo-2022.jpg?66a0cb4c" alt="Lahev Ocho Blanco">
@@ -767,7 +810,7 @@
                     </div>
                 </article>
 
-                 <!-- ====== Arette Blanco ====== -->
+                 {/* ====== Arette Blanco ====== */}
                 <article class="spirit-card" id="card-arette-blanco" data-brand="arette">
                     <div class="spirit-image">
                          <img src="https://www.everythingwine.ca/media/catalog/product/3/3/336121_arette_blanco_tequila_700_ml.jpeg?quality=80&bg-color=255,255,255&fit=bounds&height=700&width=700&canvas=700:700" alt="Lahev Arette Blanco">
@@ -803,7 +846,7 @@
                     </div>
                 </article>
 
-                <!-- ====== Arette Reposado ====== -->
+                {/* ====== Arette Reposado ====== */}
                 <article class="spirit-card" id="card-arette-reposado" data-brand="arette">
                     <div class="spirit-image">
                         <img src="https://www.regionalwines.co.nz/cdn/shop/products/SS3141_fd6b0c4f-b714-44ec-ba94-dfd96aa17a35.jpg?v=1669154813" alt="Lahev Arette Reposado">
@@ -838,7 +881,7 @@
                     </div>
                 </article>
 
-                <!-- ====== Los Tres Tonos Reposado ====== -->
+                {/* ====== Los Tres Tonos Reposado ====== */}
                 <article class="spirit-card" id="card-ltt-reposado" data-brand="los-tres-tonos">
                     <div class="spirit-image">
                         <img src="https://www.eshop.maneo.cz/pic_zbozi/11332.jpg" alt="Lahev Los Tres Tonos Reposado">
@@ -874,7 +917,7 @@
                     </div>
                 </article>
 
-                 <!-- ====== Herradura Blanco ====== -->
+                 {/* ====== Herradura Blanco ====== */}
                 <article class="spirit-card" id="card-herradura-blanco" data-brand="herradura">
                     <div class="spirit-image">
                         <img src="https://images.albertsons-media.com/is/image/ABS/189031308-C1N1?$ng-ecom-pdp-mobile$&defaultImage=Not_Available" alt="Lahev Herradura Blanco">
@@ -910,7 +953,7 @@
                     </div>
                 </article>
 
-                <!-- ====== Herradura Reposado ====== -->
+                {/* ====== Herradura Reposado ====== */}
                 <article class="spirit-card" id="card-herradura-reposado" data-brand="herradura">
                     <div class="spirit-image">
                         <img src="https://cdn.myshoptet.com/usr/www.idrinks.cz/user/shop/big/29856_uk-2021-herradura-reposado-70cl-se-eu-no-signature-10041575-transparerntbg.jpg?6740466c" alt="Lahev Herradura Reposado">
@@ -946,7 +989,7 @@
                     </div>
                 </article>
 
-                <!-- ====== Don Ramon Blanco ====== -->
+                {/* ====== Don Ramon Blanco ====== */}
                 <article class="spirit-card" id="card-dramon-blanco" data-brand="don-ramon">
                     <div class="spirit-image">
                         <img src="https://cdnx.jumpseller.com/la-vinateria/image/43747319/thumb/1079/1079?1741188767" alt="Lahev Don Ramon Blanco">
@@ -981,7 +1024,7 @@
                     </div>
                 </article>
 
-                <!-- ====== Don Ramon Cristalino ====== -->
+                {/* ====== Don Ramon Cristalino ====== */}
                 <article class="spirit-card" id="card-dramon-cristalino" data-brand="don-ramon">
                     <div class="spirit-image">
                         <img src="https://www.emdrinks.cz/3127-thickbox_default/don-ramon-platinium-anejo-cristalino-70cl-alc-35.jpg" alt="Lahev Don Ramon Cristalino">
@@ -1013,7 +1056,7 @@
                     </div>
                 </article>
 
-                <!-- ====== La Gritona Reposado ====== -->
+                {/* ====== La Gritona Reposado ====== */}
                 <article class="spirit-card" id="card-gritona-reposado" data-brand="la-gritona">
                     <div class="spirit-image">
                         <img src="https://www.canadianliquorstore.ca/cdn/shop/products/863293_1024x1024.jpg?v=1707263686" alt="Lahev La Gritona Reposado">
@@ -1051,7 +1094,7 @@
                     </div>
                 </article>
 
-                 <!-- ====== Rey Campero Espadín ====== -->
+                 {/* ====== Rey Campero Espadín ====== */}
                 <article class="spirit-card" id="card-reycampero-espadin" data-brand="rey-campero">
                     <div class="spirit-image">
                         <img src="https://www.warehouse1.cz/variant/eshop/product-detail-microdata-1x1/edeeshop/warehouse1/product/hlavni-motiv/4016/3065_rey_campero_espadin.jpg" alt="Lahev Rey Campero Espadín">
@@ -1088,7 +1131,7 @@
                     </div>
                 </article>
 
-                <!-- ====== San Cosme Joven ====== -->
+                {/* ====== San Cosme Joven ====== */}
                 <article class="spirit-card" id="card-sancosme-joven" data-brand="san-cosme">
                     <div class="spirit-image">
                         <img src="https://img-cdn.heureka.group/v1/80af88d4-ff56-4790-8dda-d7c9766f57f8.jpg?width=400&height=400" alt="Lahev San Cosme Joven">
@@ -1124,7 +1167,7 @@
                     </div>
                 </article>
 
-                 <!-- ====== Ojo de Tigre Joven ====== -->
+                 {/* ====== Ojo de Tigre Joven ====== */}
                 <article class="spirit-card" id="card-ojodetigre-joven" data-brand="ojo-de-tigre">
                     <div class="spirit-image">
                         <img src="https://www.mezcalreviews.com/wp-content/uploads/2020/05/ojo-de-tigre-joven-mezcal.jpg" alt="Lahev Ojo de Tigre Joven">
@@ -1161,7 +1204,7 @@
                     </div>
                 </article>
 
-                <!-- ====== Del Maguey Vida ====== -->
+                {/* ====== Del Maguey Vida ====== */}
                 <article class="spirit-card" id="card-delmaguey-vida" data-brand="del-maguey">
                     <div class="spirit-image">
                          <img src="https://cdn.myshoptet.com/usr/www.stramis.cz/user/shop/big/95301_del-maguey-vida.jpg?651ad355" alt="Lahev Del Maguey Vida">
@@ -1198,7 +1241,7 @@
                     </div>
                 </article>
 
-                 <!-- ====== Contraluz Cristalino ====== -->
+                 {/* ====== Contraluz Cristalino ====== */}
                 <article class="spirit-card" id="card-contraluz-cristalino" data-brand="contraluz">
                     <div class="spirit-image">
                         <img src="https://cdn.myshoptet.com/usr/www.pojdnapanaka.cz/user/shop/big/32976_contraluz-cristalino-36--0-7l.jpg?67d89e8a" alt="Lahev Contraluz Cristalino">
@@ -1234,7 +1277,7 @@
                     </div>
                 </article>
 
-                <!-- ====== Quiéreme Mucho ====== -->
+                {/* ====== Quiéreme Mucho ====== */}
                 <article class="spirit-card" id="card-quiereme-mucho" data-brand="quiereme-mucho">
                     <div class="spirit-image">
                         <img src="https://cdn11.bigcommerce.com/s-u9ww3di/images/stencil/1280x1280/products/7322/10263/QUIEREME_MUCHO_MEZCAL_3_set__98292.1505688883.jpg?c=2" alt="Lahev Quiéreme Mucho">
@@ -1288,12 +1331,23 @@
             const showSummaryLink = document.getElementById('show-summary');
             const showAllBottlesLink = document.getElementById('show-all-bottles');
             const allCards = spiritsContainer.querySelectorAll('.spirit-card'); // Cache all cards
+            const brandTitleDisplay = document.getElementById('brand-title-display'); // Cache brand title element
 
             // --- Function to set the main content view ---
             const setView = (viewName) => {
                 const viewClasses = ['info-view', 'single-bottle-view', 'brand-view', 'all-bottles-view'];
                 viewClasses.forEach(cls => mainContent.classList.remove(cls));
                 mainContent.classList.add(viewName);
+
+                // Ensure cards reset visibility/animation states unless explicitly set later
+                allCards.forEach(card => {
+                    card.classList.remove('visible', 'brand-visible');
+                    // Optionally reset animation immediately if needed, though CSS handles new reveals
+                    // card.style.animation = 'none'; // Might cause flashes, CSS approach is better
+                });
+
+                // Scroll main content to top smoothly on view change
+                mainContent.scrollTo({ top: 0, behavior: 'smooth' });
             };
 
             // --- Function to close mobile sidebar ---
@@ -1307,17 +1361,21 @@
             setView('info-view'); // Start with the summary view
 
             // --- Mobile Menu Toggle ---
-            menuToggle.addEventListener('click', () => {
+            menuToggle.addEventListener('click', (event) => {
+                event.stopPropagation(); // Prevent triggering main content click listener
                 body.classList.toggle('sidebar-visible');
             });
 
             // --- Sidebar Interaction Logic ---
             sidebar.addEventListener('click', (event) => {
+                event.stopPropagation(); // Prevent triggering main content click listener
+
                 // --- Handle Category Expansion ---
                 if (event.target.classList.contains('category-name')) {
                     const parentLi = event.target.closest('li');
                     if (parentLi) {
                         parentLi.classList.toggle('expanded');
+                        // No view change, so no scroll needed here
                     }
                 }
 
@@ -1329,12 +1387,8 @@
 
                     if (targetCard) {
                         setView('single-bottle-view');
-
-                        // Hide all, show target
-                        allCards.forEach(card => card.classList.remove('visible', 'brand-visible'));
+                        // Hide all (done by setView), show target
                         targetCard.classList.add('visible');
-
-                        mainContent.scrollTop = 0;
                         closeMobileSidebar();
                     }
                 }
@@ -1343,9 +1397,6 @@
                  else if (event.target.id === 'show-summary') {
                      event.preventDefault();
                      setView('info-view');
-                      // Hide any specific card visibility classes
-                     allCards.forEach(card => card.classList.remove('visible', 'brand-visible'));
-                     mainContent.scrollTop = 0;
                      closeMobileSidebar();
                  }
 
@@ -1353,9 +1404,6 @@
                  else if (event.target.id === 'show-all-bottles') {
                      event.preventDefault();
                      setView('all-bottles-view');
-                      // Hide any specific card visibility classes
-                     allCards.forEach(card => card.classList.remove('visible', 'brand-visible'));
-                     mainContent.scrollTop = 0;
                      closeMobileSidebar();
                  }
             });
@@ -1368,36 +1416,29 @@
                 if (brandLink) {
                     event.preventDefault();
                     const targetBrand = brandLink.dataset.brandTarget;
+                    const brandName = brandLink.textContent.trim(); // Get brand name from link text
 
-                    if (targetBrand) {
-                        setView('brand-view');
-                        let foundBrand = false;
-                        allCards.forEach(card => {
-                            card.classList.remove('visible'); // Remove single visibility
+                    if (targetBrand && brandTitleDisplay) {
+                         brandTitleDisplay.textContent = `Lahve Značky: ${brandName}`; // Set brand title
+                         setView('brand-view'); // Change view AFTER setting title maybe? Order matters less here.
+                         let foundBrand = false;
+                         allCards.forEach(card => {
                             if (card.dataset.brand === targetBrand) {
                                 card.classList.add('brand-visible');
                                 foundBrand = true;
-                            } else {
-                                card.classList.remove('brand-visible');
                             }
-                        });
-                        // Optional: If no cards found for brand, maybe switch to info or all view?
-                        // if (!foundBrand) setView('all-bottles-view');
-
-                        mainContent.scrollTop = 0;
-                        // No need to close sidebar here, click originated in main content
+                         });
+                        // Scroll handled by setView
                     }
                 }
                 // --- Handle Click Outside Sidebar on Mobile ---
-                else if (body.classList.contains('sidebar-visible') && !event.target.closest('#sidebar') && !event.target.closest('#menu-toggle')) {
+                // Only close if the sidebar is actually visible and the click wasn't on the toggle button
+                else if (body.classList.contains('sidebar-visible') && !event.target.closest('#sidebar') && event.target !== menuToggle) {
                      closeMobileSidebar();
                 }
             });
 
-            // Prevent clicks inside the sidebar from closing it via the mainContent listener
-            sidebar.addEventListener('click', (event) => {
-                 event.stopPropagation();
-            });
+            // Prevent clicks inside the sidebar from closing it via the mainContent listener is handled by event.stopPropagation() in sidebar listener
 
         });
     </script>
