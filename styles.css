@@ -1,0 +1,1404 @@
+/* Základní Reset & Písmo */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+html, body {
+    height: 100%;
+    overflow-x: hidden; /* Prevent horizontal scroll */
+}
+
+body {
+    font-family: 'Poppins', sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #ededed;
+    color: #333;
+    line-height: 1.6;
+    position: relative;
+}
+
+/* Layout Kontejner */
+.page-container {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    min-height: 100vh;
+}
+
+/* --- Top Bar --- */
+.top-bar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    background-color: #ffffff;
+    padding: 10px 20px;
+    display: flex;
+    justify-content: center; /* Center the header text */
+    align-items: center;
+    z-index: 1100;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+.top-bar h1 {
+    margin: 0;
+    font-size: 1.5em;
+    color: #2c3e50;
+}
+
+/* --- Main Content Area --- */
+#main-content {
+    margin-top: 60px; /* Adjust for the top bar */
+    flex-grow: 1;
+    padding: 20px;
+    overflow-y: auto;
+    transition: margin-left 0.3s ease-in-out;
+    scroll-behavior: smooth; /* Smooth scrolling */
+}
+
+/* --- Sidebar Base Styles --- */
+#sidebar {
+    width: 100%;
+    background-color: #ffffff;
+    padding: 10px 20px;
+    overflow-y: auto;
+    border-bottom: 1px solid #e0e0e0;
+    flex-shrink: 0;
+    transition: transform 0.3s ease-in-out;
+    z-index: 1000;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+    display: flex;
+    flex-direction: row; /* Display items horizontally */
+    justify-content: space-around; /* Space items evenly */
+    align-items: center; /* Center items vertically */
+}
+
+#sidebar h3 {
+    display: none;
+}
+
+#sidebar ul {
+    list-style: none;
+    padding-left: 0;
+    display: flex;
+    flex-direction: row; /* Display items horizontally */
+    width: 100%; /* Ensure full width */
+}
+
+#sidebar ul li {
+    margin-right: 15px; /* Add some space between items */
+    margin-bottom: 0; /* Remove bottom margin */
+}
+
+/* Sidebar general links styling */
+#sidebar .sidebar-link {
+    display: block;
+    padding: 8px 10px;
+    font-weight: 500;
+    color: #2c3e50;
+    text-decoration: none;
+    cursor: pointer;
+    border-radius: 4px;
+    margin-bottom: 0;
+    transition: background-color 0.2s ease;
+}
+
+/* Make main navigation options bigger and bolder */
+#sidebar #show-summary,
+#sidebar #show-categories,
+#sidebar #show-all-bottles {
+    font-size: 1.2em;
+    font-weight: 700;
+    padding: 12px 10px;
+    margin-bottom: 5px;
+    color: #000000;
+}
+
+#sidebar .sidebar-link:hover {
+    background-color: #f5f5f5;
+    color: #000000;
+    text-decoration: none;
+}
+
+/* Category styling */
+#sidebar .category-divider {
+    display: none;
+}
+
+#sidebar .category-name {
+    font-weight: 600;
+    cursor: pointer;
+    padding: 8px 10px;
+    display: block;
+    color: #2c3e50;
+    position: relative;
+    padding-left: 25px;
+    border-radius: 4px;
+    transition: background-color 0.2s ease;
+}
+
+#sidebar .category-name::before {
+    content: '▶';
+    position: absolute;
+    left: 8px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 0.7em;
+    transition: transform 0.2s ease-in-out;
+    color: #2c3e50;
+}
+
+#sidebar li.expanded > .category-name::before {
+    transform: translateY(-50%) rotate(90deg);
+}
+
+#sidebar .category-name:hover {
+    background-color: #f5f5f5;
+}
+
+#sidebar .bottle-list {
+    display: none;
+    padding-left: 25px;
+    margin-top: 5px;
+    margin-bottom: 10px;
+    border-left: 2px solid #e0e0e0;
+    margin-left: 10px;
+}
+
+#sidebar li.expanded > .bottle-list {
+    display: block;
+}
+
+/* Bottle links in sidebar */
+#sidebar .bottle-link {
+    color: #4a4a4a;
+    text-decoration: none;
+    display: block;
+    padding: 5px 8px;
+    font-size: 0.9em;
+    border-radius: 3px;
+    font-weight: normal;
+    margin-bottom: 2px;
+    transition: background-color 0.2s ease;
+}
+
+#sidebar .bottle-link:hover {
+    background-color: #f5f5f5;
+    color: #000000;
+}
+
+/* Remove 'Navigace' header */
+#sidebar h3 {
+    display: none;
+}
+
+/* Remove 'Speciální' from Tequila Anejo */
+#sidebar .bottle-link[data-target="card-tequila-anejo"]::before {
+    content: "Tequila Anejo";
+    display: block;
+}
+
+/* --- Menu Toggle Button (Mobile Only) --- */
+#menu-toggle {
+    display: none; /* Hide the hamburger menu by default */
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    z-index: 1100;
+    background-color: #ffffff;
+    color: #2c3e50;
+    border: 1px solid #e0e0e0;
+    padding: 8px 12px;
+    font-size: 1.5em;
+    line-height: 1;
+    cursor: pointer;
+    border-radius: 4px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+/* Hlavička */
+.main-header {
+    text-align: center;
+    margin-bottom: 30px;
+    padding-bottom: 15px;
+    border-bottom: none;
+    animation: fadeIn 0.5s ease;
+}
+
+.main-header h1 {
+    color: #2c3e50;
+    margin-bottom: 5px;
+}
+
+.main-header p {
+    color: #4a4a4a;
+    font-size: 1.1em;
+}
+
+/* Brand Title Display */
+#brand-title-display {
+    display: none;
+    text-align: center;
+    margin-bottom: 30px;
+    padding-bottom: 15px;
+    border-bottom: none;
+    color: #2c3e50;
+    font-size: 1.8em;
+    font-weight: bold;
+    animation: fadeIn 0.5s ease;
+}
+
+/* Sekce s informacemi o kategoriích */
+.category-info {
+    background-color: #ffffff;
+    padding: 25px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    margin-bottom: 30px;
+    animation: fadeIn 0.5s ease;
+}
+
+.category-info h2 {
+    color: #2c3e50;
+    margin-bottom: 20px;
+    border-bottom: none;
+    padding-bottom: 10px;
+    text-align: center;
+    font-size: 1.8em;
+}
+
+.category-info h3 {
+    color: #2c3e50;
+    margin-top: 20px;
+    margin-bottom: 8px;
+    font-size: 1.3em;
+}
+
+.category-info p {
+    margin-bottom: 12px;
+    color: #4a4a4a;
+}
+
+.category-info strong {
+    color: #000000;
+    font-weight: 600;
+}
+
+.category-info ul {
+    padding-left: 20px;
+    margin-bottom: 15px;
+}
+
+.category-info li {
+    margin-bottom: 5px;
+    color: #4a4a4a;
+}
+
+/* Kontejner pro karty destilátů */
+.spirits-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    justify-content: center;
+}
+
+/* --- View State Management --- */
+#main-content.info-view .category-info {
+    display: block;
+}
+
+#main-content.info-view .spirits-container {
+    display: none;
+}
+
+#main-content.info-view .main-header {
+    display: block;
+}
+
+#main-content.info-view #brand-title-display {
+    display: none;
+}
+
+#main-content.all-bottles-view .category-info {
+    display: none;
+}
+
+#main-content.all-bottles-view .spirits-container {
+    display: flex;
+}
+
+#main-content.all-bottles-view .spirit-card {
+    display: flex;
+    opacity: 1;
+    animation: fadeInCard 0.4s ease forwards;
+}
+
+#main-content.all-bottles-view .main-header {
+    display: block;
+}
+
+#main-content.all-bottles-view #brand-title-display {
+    display: none;
+}
+
+#main-content.single-bottle-view .category-info {
+    display: none;
+}
+
+#main-content.single-bottle-view .spirits-container {
+    display: flex;
+    justify-content: center;
+}
+
+#main-content.single-bottle-view .spirit-card {
+    display: none;
+    opacity: 0;
+}
+
+#main-content.single-bottle-view .spirit-card.visible {
+    display: flex;
+    opacity: 1;
+    max-width: 480px;
+    animation: fadeInCard 0.5s ease forwards;
+}
+
+#main-content.single-bottle-view .main-header {
+    display: none;
+}
+
+#main-content.single-bottle-view #brand-title-display {
+    display: none;
+}
+
+#main-content.brand-view .category-info {
+    display: none;
+}
+
+#main-content.brand-view .spirits-container {
+    display: flex;
+}
+
+#main-content.brand-view .spirit-card {
+    display: none;
+    opacity: 0;
+}
+
+#main-content.brand-view .spirit-card.brand-visible {
+    display: flex;
+    opacity: 1;
+    animation: fadeInCard 0.4s ease forwards;
+}
+
+#main-content.brand-view .main-header {
+    display: none;
+}
+
+#main-content.brand-view #brand-title-display {
+    display: none;
+}
+
+/* Spirit Card Styling */
+.spirit-card {
+    display: block;
+    width: 80%;
+}
+
+.spirit-card .spirit-content {
+    line-height: 1.3;
+    font-size: 1rem;
+    padding: 1.2rem 1rem;
+}
+
+.spirit-card .spirit-content h2 {
+    font-size: 1.5rem;
+    background: none;
+    margin-bottom: 0.7em;
+    margin-top: 0.5em;
+    padding: 0;
+}
+
+.spirit-card .spirit-content h4 {
+    font-size: 1.1rem;
+    margin-bottom: 0.5em;
+    margin-top: 1em;
+}
+
+.spirit-card .spirit-content p,
+.spirit-card .spirit-content ul,
+.spirit-card .spirit-content li {
+    font-size: 1rem;
+    margin-bottom: 0.3em;
+    margin-top: 0;
+}
+
+.spirit-card .spirit-content ul {
+    margin-left: 1.2em;
+    padding-left: 0;
+}
+
+.spirit-card .spirit-content li {
+    margin-bottom: 0.2em;
+    font-size: 1rem;
+}
+
+.spirit-card .taste-profile-section ul {
+    list-style: disc inside;
+    margin: 0 0 0.5em 1em;
+    padding: 0;
+}
+
+.spirit-card .taste-profile-section li {
+    margin-bottom: 0.2em;
+    font-size: 1rem;
+}
+
+.spirit-card h4 {
+    display: block;
+}
+
+.spirit-card p {
+    display: block;
+}
+
+.spirit-card ul {
+    display: block;
+}
+
+.spirit-card ul li {
+    display: block;
+}
+
+.spirit-card strong {
+    display: inline;
+}
+
+.tags {
+    margin-top: 15px;
+}
+
+.tag {
+    display: inline-block;
+    padding: 3px 8px;
+    margin-right: 5px;
+    margin-bottom: 5px;
+    border-radius: 3px;
+    font-size: 0.8em;
+    font-weight: 500;
+}
+
+.tag.tequila {
+    background-color: #e8f5e9;
+    color: #2e7d32;
+}
+
+.tag.mezcal {
+    background-color: #fce4ec;
+    color: #c2185b;
+}
+
+.tag.blanco {
+    background-color: #e3f2fd;
+    color: #1565c0;
+}
+
+.tag.reposado {
+    background-color: #fff3e0;
+    color: #ef6c00;
+}
+
+.tag.anejo {
+    background-color: #fce4ec;
+    color: #c2185b;
+}
+
+.tag.cristalino {
+    background-color: #e0f7fa;
+    color: #00838f;
+}
+
+.tag.extra-anejo {
+    background-color: #fff3e0;
+    color: #ef6c00;
+}
+
+.tag.joven {
+    background-color: #f5f5f5;
+    color: #424242;
+}
+
+.tag.lowlands {
+    background-color: #fff3e0;
+    color: #ef6c00;
+}
+
+.tag.highlands {
+    background-color: #e8f5e9;
+    color: #2e7d32;
+}
+
+.tag.blend {
+    background-color: #e3f2fd;
+    color: #1565c0;
+}
+
+.tag.single-estate {
+    background-color: #f5f5f5;
+    color: #424242;
+}
+
+.tag.additive-free {
+    background-color: #e0f7fa;
+    color: #00838f;
+}
+
+.tag.slightly-aged {
+    background-color: #fff3e0;
+    color: #ef6c00;
+}
+
+.tag.original-reposado {
+    background-color: #fff3e0;
+    color: #ef6c00;
+}
+
+.tag.woman-led {
+    background-color: #fce4ec;
+    color: #c2185b;
+}
+
+.tag.artesanal {
+    background-color: #f5f5f5;
+    color: #424242;
+}
+
+.tag.single-village {
+    background-color: #f5f5f5;
+    color: #424242;
+}
+
+.tag.art-bottle {
+    background-color: #fce4ec;
+    color: #c2185b;
+}
+
+.tag.tahona {
+    background-color: #f5f5f5;
+    color: #424242;
+}
+
+.tag.luxury {
+    background-color: #f5f5f5;
+    color: #424242;
+}
+
+.tag.tobala {
+    background-color: #e8f5e9;
+    color: #2e7d32;
+}
+
+.tag.espadin {
+    background-color: #fce4ec;
+    color: #c2185b;
+}
+
+.tag.oaxaca {
+    background-color: #e3f2fd;
+    color: #1565c0;
+}
+
+.spirit-card .story-section,
+.spirit-card .taste-profile-section,
+.spirit-card .technical-section,
+.spirit-card .pairing-suggestions,
+.spirit-card .price-section {
+    padding: 0.7em 0 0.7em 0;
+    border-bottom: 1px solid #ececec;
+}
+.spirit-card .price-section {
+    border-bottom: none;
+}
+
+.spirit-card .price-section ul {
+    margin-left: 1.2em;
+    padding-left: 0;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes fadeInCard {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+@media (max-width: 768px) {
+    .page-container {
+        flex-direction: column;
+    }
+    .top-bar {
+        padding: 10px;
+    }
+    #menu-toggle {
+        display: block; /* Show the hamburger menu on narrow screens */
+    }
+    #sidebar {
+        transform: translateX(-100%);
+        position: fixed;
+        top: 60px; /* Adjust for the top bar */
+        left: 0;
+        height: calc(100% - 60px);
+        width: 250px;
+        background-color: #ffffff;
+        box-shadow: 2px 0 5px rgba(0,0,0,0.1);
+        flex-direction: column; /* Stack items vertically */
+        align-items: flex-start; /* Align items to the start */
+    }
+    #sidebar ul {
+        flex-direction: column; /* Stack items vertically */
+    }
+    #sidebar ul li {
+        margin-bottom: 5px; /* Add some space between items */
+        margin-right: 0; /* Remove right margin */
+    }
+    body.sidebar-visible #sidebar {
+        transform: translateX(0);
+    }
+    #main-content {
+        margin-left: 0;
+    }
+    .spirit-card {
+        max-width: 100%;
+        margin: 1rem;
+    }
+    #main-content.single-bottle-view .spirit-card.visible {
+        max-width: 95%;
+    }
+    .category-info {
+        padding: 15px;
+    }
+    .category-info h2 {
+        font-size: 1.6em;
+    }
+    .category-info h3 {
+        font-size: 1.2em;
+    }
+    #brand-title-display {
+        font-size: 1.6em;
+    }
+    .spirit-card .spirit-content {
+        padding: 1.5rem;
+        gap: 1.5rem;
+    }
+    .spirit-card .story-section,
+    .spirit-card .taste-profile-section,
+    .spirit-card .technical-section,
+    .spirit-card .pairing-suggestions,
+    .spirit-card .price-section {
+        padding: 1.2rem;
+        border-radius: 8px;
+    }
+    .spirit-card h4 {
+        font-size: 1.1rem;
+        margin-bottom: 0.8rem;
+    }
+    .spirit-card p {
+        font-size: 1rem;
+        line-height: 1.6;
+        margin-bottom: 0.8rem;
+    }
+    .spirit-card ul li {
+        font-size: 0.95rem;
+        margin-bottom: 0.6rem;
+        padding-left: 1.5rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .spirit-card {
+        margin: 0.5rem;
+        border-radius: 12px;
+    }
+    .spirit-card .spirit-content {
+        padding: 1rem;
+        gap: 1rem;
+    }
+    .spirit-card .story-section,
+    .spirit-card .taste-profile-section,
+    .spirit-card .technical-section,
+    .spirit-card .pairing-suggestions,
+    .spirit-card .price-section {
+        padding: 1rem;
+    }
+    .spirit-card h4 {
+        font-size: 1.1rem;
+        margin-bottom: 0.8rem;
+    }
+    .spirit-card p {
+        font-size: 1rem;
+        line-height: 1.6;
+        margin-bottom: 0.8rem;
+    }
+    .spirit-card ul li {
+        font-size: 0.9rem;
+        margin-bottom: 0.5rem;
+        padding-left: 1.3rem;
+    }
+}
+
+/* Info Section Styling */
+.summary-info,
+.categories-info {
+    background: white;
+    padding: 2rem;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    margin-bottom: 2rem;
+}
+
+.summary-info h2,
+.categories-info h2 {
+    color: #2c3e50;
+    margin-bottom: 1.5rem;
+    font-size: 1.8rem;
+}
+
+.summary-info h3,
+.categories-info h3 {
+    color: #2c3e50;
+    margin: 1.5rem 0 1rem;
+    font-size: 1.4rem;
+}
+
+.summary-info p,
+.categories-info p {
+    color: #34495e;
+    line-height: 1.6;
+    margin-bottom: 1rem;
+}
+
+.summary-info ul,
+.categories-info ul {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 1.5rem 0;
+}
+
+.summary-info ul li,
+.categories-info ul li {
+    margin-bottom: 1rem;
+    padding-left: 1.5rem;
+    position: relative;
+}
+
+.summary-info ul li:before,
+.categories-info ul li:before {
+    content: "•";
+    color: #e67e22;
+    position: absolute;
+    left: 0;
+}
+
+.summary-info ul li ul,
+.categories-info ul li ul {
+    margin-top: 0.5rem;
+    margin-bottom: 0;
+}
+
+.summary-info ul li ul li,
+.categories-info ul li ul li {
+    margin-bottom: 0.5rem;
+    font-size: 0.95rem;
+}
+
+.summary-info strong,
+.categories-info strong {
+    color: #2c3e50;
+    font-weight: 600;
+}
+
+#all-bottles-title {
+    text-align: center;
+    margin-top: 0.5rem;
+    margin-bottom: 2rem;
+    font-size: 2rem;
+    color: #2c3e50;
+}
+
+.bottles-grid {
+    background: #fff;
+    border-radius: 6px;
+    box-shadow: 0 4px 24px 0 rgba(44,62,80,0.10);
+    padding: 1.2rem 1.2rem 1rem 1.2rem;
+    margin: 0 auto 3rem auto;
+    max-width: 1400px;
+    width: 98%;
+}
+
+.spirit-card,
+.summary-info,
+.categories-info,
+.category-info {
+    max-width: 1200px;
+    width: 95%;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 1.2rem;
+    margin-bottom: 1.2rem;
+    padding-top: 1.2rem;
+    padding-bottom: 1.2rem;
+}
+
+.category-header {
+    font-size: 1.8rem;
+    color: #2c3e50;
+    margin: 0 0 1.5rem 0;
+    padding: 0;
+    border-bottom: 1px solid #e0e0e0;
+    position: relative;
+    width: 100%;
+    text-align: center;
+    grid-column: 1 / -1;
+}
+
+.bottles-section {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
+    width: 100%;
+    margin-bottom: 0;
+    max-width: 800px;
+    margin-left: auto;
+    margin-right: auto;
+    padding-top: 0.5rem;
+}
+
+.bottle-square {
+    background-color: white;
+    border-radius: 6px;
+    border: none;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    padding: 0.75rem;
+    text-align: center;
+    text-decoration: none;
+    color: #333;
+    transition: all 0.3s ease;
+    aspect-ratio: 4/2;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 180px;
+    height: 90px;
+    margin: 0 auto;
+}
+
+/* Color coding for different tequila types */
+.bottle-square[data-target*="blanco"] {
+    background-color: #e3f2fd; /* Light blue */
+}
+
+.bottle-square[data-target*="reposado"] {
+    background-color: #fff3e0; /* Light orange */
+}
+
+.bottle-square[data-target*="anejo"],
+.bottle-square[data-target*="1942"],
+.bottle-square[data-target*="xa"] {
+    background-color: #ffebee; /* Light red */
+}
+
+.bottle-square[data-target*="cristalino"] {
+    background-color: #ffffff; /* White */
+    border: 1px solid #e0e0e0;
+}
+
+.bottle-square[data-target*="mezcal"],
+.bottle-square[data-target*="ojodetigre"],
+.bottle-square[data-target*="quiereme"],
+.bottle-square[data-target*="contraluz"],
+.bottle-square[data-target*="siete-misterios"] {
+    background-color: #f5f5f5; /* Light grey */
+}
+
+.bottle-square:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+    border-color: #999;
+}
+
+.bottle-square h3 {
+    margin: 0;
+    font-size: 1.6rem;
+    line-height: 1.2;
+    font-weight: 500;
+    width: 100%;
+}
+
+@media (max-width: 768px) {
+    .bottles-grid {
+        gap: 2.5rem;
+        padding: 0.25rem;
+    }
+
+    .bottles-section {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 0.75rem;
+        padding-top: 0.25rem;
+    }
+
+    .category-header {
+        font-size: 1.5rem;
+        margin-bottom: 1rem;
+    }
+
+    .bottle-square {
+        width: 150px;
+        height: 75px;
+    }
+
+    .bottle-square h3 {
+        font-size: 1.3rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .bottles-grid {
+        gap: 2rem;
+        padding: 0.25rem;
+    }
+
+    .bottles-section {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 0.5rem;
+        padding-top: 0.25rem;
+    }
+
+    .category-header {
+        font-size: 1.3rem;
+        margin-bottom: 0.75rem;
+    }
+
+    .bottle-square {
+        width: 130px;
+        height: 65px;
+    }
+
+    .bottle-square h3 {
+        font-size: 1.1rem;
+    }
+}
+
+/* Update spirit card backgrounds based on category */
+.spirit-card[data-category="blanco"] {
+    background: #f8f9fa;
+}
+
+.spirit-card[data-category="reposado"] {
+    background: #f8f9fa;
+}
+
+.spirit-card[data-category="anejo"] {
+    background: #f8f9fa;
+}
+
+.spirit-card[data-category="extra-anejo"] {
+    background: #f8f9fa;
+}
+
+.spirit-card[data-category="mezcal"] {
+    background: #f8f9fa;
+}
+
+.spirit-card[data-category="cristalino"] {
+    background: #f8f9fa;
+}
+
+.spirit-card[data-category="flavored"] {
+    background: #f8f9fa;
+}
+
+.spirit-card[data-category="limited"] {
+    background: #f8f9fa;
+}
+
+.categories {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    margin-bottom: 2rem;
+    justify-content: center;
+}
+
+.categories li {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.categories a {
+    display: inline-block;
+    padding: 0.8rem 1.5rem;
+    background: #ffffff;
+    color: #000000;
+    text-decoration: none;
+    border-radius: 8px;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    border: 1px solid #ddd;
+}
+
+.categories a:hover {
+    background: #f8f9fa;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+.categories a.active {
+    background: #f8f9fa;
+    color: #000000;
+    border-color: #000000;
+    font-weight: 600;
+}
+
+nav ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    gap: 2rem;
+}
+
+nav ul li {
+    position: relative;
+    margin: 0;
+    padding: 0;
+}
+
+nav ul li a {
+    color: #000000;
+    text-decoration: none;
+    font-weight: 500;
+    padding: 0.5rem 1rem;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+}
+
+nav ul li a:hover {
+    background: #f8f9fa;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+nav ul li a.active {
+    background: #f8f9fa;
+    color: #000000;
+    border: 1px solid #000000;
+    font-weight: 600;
+}
+
+/* Dropdown menu styling */
+nav ul li ul {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    background: #ffffff;
+    min-width: 200px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    border-radius: 8px;
+    padding: 0.5rem;
+    flex-direction: column;
+    gap: 0.5rem;
+    z-index: 1000;
+}
+
+nav ul li:hover ul {
+    display: flex;
+}
+
+nav ul li ul li {
+    width: 100%;
+}
+
+nav ul li ul li a {
+    display: block;
+    padding: 0.8rem 1rem;
+    color: #000000;
+    text-decoration: none;
+    border-radius: 6px;
+    transition: all 0.3s ease;
+}
+
+nav ul li ul li a:hover {
+    background: #f8f9fa;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+nav ul li ul li a.active {
+    background: #f8f9fa;
+    color: #000000;
+    border: 1px solid #000000;
+    font-weight: 600;
+}
+
+#kategorie ul {
+    list-style: none !important;
+    padding: 0;
+    margin: 0;
+}
+
+#kategorie ul li {
+    list-style: none !important;
+    margin: 0;
+    padding: 0;
+}
+
+#kategorie ul li ul {
+    list-style: none !important;
+    padding: 0;
+    margin: 0.5rem 0 1rem 1rem;
+}
+
+#kategorie ul li ul li {
+    list-style: none !important;
+    margin: 0;
+    padding: 0;
+    position: relative;
+}
+
+#kategorie ul li ul li:before {
+    content: "•";
+    color: #000000 !important;
+    position: absolute;
+    left: -1rem;
+    font-size: 1.2rem;
+}
+
+#kategorie ul li strong {
+    color: #000000 !important;
+    font-weight: 600;
+    display: block;
+    margin-bottom: 0.5rem;
+}
+
+#kategorie ul li ul li strong {
+    color: #000000 !important;
+    display: inline;
+    margin: 0;
+}
+
+#kategorie ul li ul li {
+    color: #000000 !important;
+}
+
+#kategorie {
+    padding: 2rem 0;
+}
+
+#kategorie h2 {
+    text-align: center;
+    margin-bottom: 2rem;
+    color: #000000;
+}
+
+.category-content {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 0 1rem;
+}
+
+.category-type {
+    margin-bottom: 2rem;
+    background: #ffffff;
+    padding: 1.5rem;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+}
+
+.category-type h3 {
+    color: #000000;
+    margin: 0 0 1rem 0;
+    font-size: 1.4rem;
+    font-weight: 600;
+}
+
+.category-type ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.category-type ul li {
+    margin: 0.5rem 0;
+    padding: 0;
+    color: #000000;
+}
+
+.category-type ul li strong {
+    color: #000000;
+    font-weight: 600;
+}
+
+@media (max-width: 768px) {
+    .category-type {
+        padding: 1.2rem;
+    }
+
+    .category-type h3 {
+        font-size: 1.2rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .category-type {
+        padding: 1rem;
+    }
+
+    .category-type h3 {
+        font-size: 1.1rem;
+    }
+}
+
+.categories-info {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 2rem 1rem;
+}
+
+.categories-info h3:first-child {
+    margin-top: 0;
+    padding-top: 0;
+}
+
+.categories-info h3 {
+    color: #000000;
+    margin: 2rem 0 1rem 0;
+    font-size: 1.6rem;
+    font-weight: 600;
+}
+
+.categories-info h4 {
+    color: #000000;
+    margin: 1.5rem 0 1rem 0;
+    font-size: 1.3rem;
+    font-weight: 600;
+}
+
+.categories-info ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.categories-info ul li {
+    margin: 0.5rem 0;
+    padding: 0;
+    color: #000000;
+}
+
+.categories-info ul li:before {
+    content: "•";
+    color: #000000;
+    position: absolute;
+    left: -1rem;
+    font-size: 1.2rem;
+}
+
+.categories-info ul li ul {
+    list-style: none;
+    padding: 0;
+    margin: 0.5rem 0 1rem 1rem;
+}
+
+.categories-info ul li ul li {
+    margin: 0.5rem 0;
+    padding: 0;
+    position: relative;
+}
+
+.categories-info ul li ul li:before {
+    content: "•";
+    color: #000000;
+    position: absolute;
+    left: -1rem;
+    font-size: 1.2rem;
+}
+
+.categories-info strong {
+    color: #000000;
+    font-weight: 600;
+}
+
+@media (max-width: 768px) {
+    .categories-info h3 {
+        font-size: 1.4rem;
+    }
+
+    .categories-info h4 {
+        font-size: 1.2rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .categories-info h3 {
+        font-size: 1.3rem;
+    }
+
+    .categories-info h4 {
+        font-size: 1.1rem;
+    }
+}
+
+.spirit-card.visible {
+    display: block;
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.spirit-card.visible ~ .bottles-grid .bottle-square[data-target="volcan-blanco-tahona"] {
+    display: none;
+}
+
+/* Make all corners sharp */
+.bottles-grid,
+.spirit-card,
+.summary-info,
+.categories-info,
+.category-info,
+.bottle-square,
+#sidebar,
+#menu-toggle,
+.category-header,
+.tag,
+input,
+button,
+select,
+textarea {
+    border-radius: 0 !important;
+}
+.spirit-card .card-header {
+    margin-bottom: 1.5rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid #ececec;
+}
+.spirit-card .card-header  {
+    font-size: 1.8rem;
+    color: #2c3e50;
+    margin: 0;
+    padding: 0;
+}
+
+.spirit-card .card-header {
+    margin-top: -1rem;  /* Negative margin to push it higher */
+}
+
+.spirit-card .spirit-content {
+    line-height: 1.3;
+    font-size: 1rem;
+    padding: 1.2rem 1rem;
+} 

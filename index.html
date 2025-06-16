@@ -4,370 +4,75 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Interaktivní Průvodce Agávovými Destiláty</title>
-    <style>
-        /* Základní Reset & Písmo */
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
-
-        html, body {
-            height: 100%;
-            overflow-x: hidden; /* Prevent horizontal scroll */
-        }
-
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-            line-height: 1.6;
-            background-color: #1a1a1a; /* Dark background */
-            color: #e0e0e0; /* Light text */
-            position: relative;
-        }
-
-        /* Layout Kontejner */
-        .page-container {
-            display: flex;
-            width: 100%;
-            min-height: 100vh;
-        }
-
-        /* --- Sidebar Base Styles --- */
-        #sidebar {
-            width: 280px;
-            background-color: #2c2c2c; /* Darker sidebar */
-            padding: 20px;
-            overflow-y: auto;
-            border-right: 1px solid #444; /* Subtle border */
-            flex-shrink: 0;
-            transition: transform 0.3s ease-in-out;
-            z-index: 1000;
-        }
-
-        #sidebar h3 {
-            color: #bb86fc; /* Light purple accent */
-            margin-bottom: 15px;
-            border-bottom: 1px solid #444;
-            padding-bottom: 10px;
-            text-align: center;
-        }
-
-        #sidebar ul { list-style: none; padding-left: 0; }
-        #sidebar ul li { margin-bottom: 5px; }
-
-        /* Sidebar general links styling */
-        #sidebar .sidebar-link {
-             display: block;
-             padding: 8px 10px;
-             font-weight: bold;
-             color: #8ab4f8; /* Light blue for links */
-             text-decoration: none;
-             cursor: pointer;
-             border-radius: 4px;
-             margin-bottom: 8px; /* Space between general links */
-             transition: background-color 0.2s ease, color 0.2s ease;
-        }
-         #sidebar .sidebar-link:hover {
-             background-color: #444; /* Slightly lighter hover */
-             color: #a8c7fa; /* Lighter blue on hover */
-             text-decoration: none;
-         }
-         #sidebar #show-summary {
-             color: #bb86fc; /* Match category titles */
-         }
-         /* Consistent styling for Show All Bottles */
-         #sidebar #show-all-bottles {
-             color: #bb86fc; /* Default link color */
-         }
-         #sidebar #show-all-bottles:hover {
-             color: #a8c7fa; /* Consistent hover color */
-         }
-
-         /* Category styling */
-        #sidebar .category-divider {
-            border-top: 1px dashed #444;
-            margin: 20px 0 15px 0;
-        }
-
-        #sidebar .category-name {
-            font-weight: bold; cursor: pointer; padding: 8px 10px; display: block;
-            color: #bb86fc; position: relative; padding-left: 25px;
-            border-radius: 4px;
-            transition: background-color 0.2s ease;
-        }
-        #sidebar .category-name::before {
-            content: '▶'; position: absolute; left: 8px; top: 50%;
-            transform: translateY(-50%);
-            font-size: 0.7em; transition: transform 0.2s ease-in-out;
-            color: #d8b5ff; /* Lighter purple for icon */
-        }
-        #sidebar li.expanded > .category-name::before { transform: translateY(-50%) rotate(90deg); }
-        #sidebar .category-name:hover { background-color: #444; }
-
-        #sidebar .bottle-list {
-            display: none; padding-left: 25px; margin-top: 5px; margin-bottom: 10px;
-            border-left: 2px solid #444;
-            margin-left: 10px;
-        }
-        #sidebar li.expanded > .bottle-list { display: block; }
-
-        /* Bottle links in sidebar */
-        #sidebar .bottle-link {
-            color: #c0c0c0; /* Slightly dimmer than main text */
-            text-decoration: none; display: block;
-            padding: 5px 8px; font-size: 0.9em; border-radius: 3px;
-            font-weight: normal; /* Normal weight for bottle links */
-            margin-bottom: 2px;
-             transition: background-color 0.2s ease, color 0.2s ease;
-        }
-        #sidebar .bottle-link:hover {
-             background-color: #111; /* Darker background on hover */
-             color: #d8b5ff; /* Light purple on hover */
-        }
-
-
-        /* --- Menu Toggle Button (Mobile Only) --- */
-        #menu-toggle {
-            display: none; position: fixed; top: 10px; left: 10px;
-            z-index: 1100; background-color: #bb86fc; color: #1a1a1a; /* Inverted colors */
-            border: none; padding: 8px 12px; font-size: 1.5em; line-height: 1;
-            cursor: pointer; border-radius: 4px; box-shadow: 0 2px 5px rgba(0,0,0,0.5);
-        }
-
-        /* --- Main Content Area --- */
-        #main-content {
-            flex-grow: 1;
-            padding: 20px;
-            overflow-y: auto;
-            transition: margin-left 0.3s ease-in-out;
-            scroll-behavior: smooth; /* Smooth scrolling */
-        }
-
-        /* Hlavička */
-        .main-header {
-            text-align: center; margin-bottom: 30px; padding-bottom: 15px;
-            border-bottom: 2px solid #444;
-            animation: fadeIn 0.5s ease;
-        }
-        .main-header h1 { color: #bb86fc; margin-bottom: 5px; }
-        .main-header p { color: #b0b0b0; font-size: 1.1em; }
-
-        /* Brand Title Display */
-        #brand-title-display {
-            display: none; text-align: center; margin-bottom: 30px; padding-bottom: 15px;
-            border-bottom: 2px solid #444; color: #bb86fc; font-size: 1.8em;
-            font-weight: bold; animation: fadeIn 0.5s ease;
-        }
-
-        /* Sekce s informacemi o kategoriích */
-        .category-info {
-            background-color: #252525; padding: 25px; border-radius: 8px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.3); margin-bottom: 30px;
-            animation: fadeIn 0.5s ease;
-        }
-        .category-info h2 { color: #bb86fc; margin-bottom: 20px; border-bottom: 1px solid #444; padding-bottom: 10px; text-align: center; font-size: 1.8em;}
-        .category-info h3 { color: #d8b5ff; margin-top: 20px; margin-bottom: 8px; font-size: 1.3em;}
-        .category-info p { margin-bottom: 12px; }
-        .category-info strong { color: #f0f0f0; font-weight: 600; }
-        .category-info ul { padding-left: 20px; margin-bottom: 15px; }
-        .category-info li { margin-bottom: 5px; }
-
-        /* Kontejner pro karty destilátů */
-        .spirits-container {
-            display: flex; flex-wrap: wrap; gap: 20px; justify-content: center;
-        }
-
-        /* --- View State Management --- */
-        #main-content.info-view .category-info { display: block; }
-        #main-content.info-view .spirits-container { display: none; }
-        #main-content.info-view .main-header { display: block; }
-        #main-content.info-view #brand-title-display { display: none; }
-
-        #main-content.all-bottles-view .category-info { display: none; }
-        #main-content.all-bottles-view .spirits-container { display: flex; }
-        #main-content.all-bottles-view .spirit-card { display: flex; opacity: 1; animation: fadeInCard 0.4s ease forwards; }
-        #main-content.all-bottles-view .main-header { display: block; }
-        #main-content.all-bottles-view #brand-title-display { display: none; }
-
-        #main-content.single-bottle-view .category-info { display: none; }
-        #main-content.single-bottle-view .spirits-container { display: flex; justify-content: center; }
-        #main-content.single-bottle-view .spirit-card { display: none; opacity: 0; }
-        #main-content.single-bottle-view .spirit-card.visible { display: flex; opacity: 1; max-width: 480px; animation: fadeInCard 0.5s ease forwards; }
-        #main-content.single-bottle-view .main-header { display: none; }
-        #main-content.single-bottle-view #brand-title-display { display: none; }
-
-        #main-content.brand-view .category-info { display: none; }
-        #main-content.brand-view .spirits-container { display: flex; }
-        #main-content.brand-view .spirit-card { display: none; opacity: 0; }
-        #main-content.brand-view .spirit-card.brand-visible { display: flex; opacity: 1; animation: fadeInCard 0.4s ease forwards; }
-        #main-content.brand-view .main-header { display: none; }
-        #main-content.brand-view #brand-title-display { display: block; }
-
-
-        /* Styl jednotlivé karty destilátu */
-        .spirit-card {
-            background-color: #2a2a2a; border-radius: 8px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
-            overflow: hidden; flex-direction: column;
-            width: 100%; max-width: 350px;
-            transition: transform 0.2s ease-in-out, opacity 0.3s ease;
-            opacity: 0; /* Start hidden for animation */
-            color: #e0e0e0; /* Ensure card text is light */
-        }
-        .spirit-card:hover { transform: translateY(-5px); }
-
-        .spirit-image {
-            width: 100%; height: 250px; overflow: hidden; background-color: #333; /* Darker placeholder */
-            display: flex; justify-content: center; align-items: center;
-        }
-        .spirit-image img {
-            width: auto; height: 100%; max-width: 100%; object-fit: contain; display: block;
-        }
-
-        .spirit-content { padding: 20px; flex-grow: 1; display: flex; flex-direction: column; }
-        .spirit-content h2 { color: #d8b5ff; margin-bottom: 10px; font-size: 1.4em; line-height: 1.3; }
-        /* Internal Brand Link */
-        .spirit-content h2 .brand-link-internal {
-            color: inherit; text-decoration: none; font-weight: bold;
-            border-bottom: 2px dotted #d8b5ff;
-             transition: color 0.2s ease, border-bottom-color 0.2s ease;
-        }
-        .spirit-content h2 .brand-link-internal:hover {
-            color: #bb86fc; border-bottom-color: #bb86fc;
-        }
-
-        .spirit-content h3 { color: #bb86fc; margin-top: 15px; margin-bottom: 5px; font-size: 1.1em; border-bottom: 1px solid #444; padding-bottom: 3px; }
-        .spirit-content p, .spirit-content ul { margin-bottom: 10px; font-size: 0.95em; }
-        .spirit-content strong { color: #f0f0f0; font-weight: bold; }
-        .spirit-content ul { list-style: disc; padding-left: 20px; }
-
-        .tags { margin-top: auto; padding-top: 10px; }
-        .tag {
-            display: inline-block; background-color: #444; color: #ccc; /* Default dark tag */
-            padding: 3px 8px; border-radius: 12px; font-size: 0.8em;
-            margin-right: 5px; margin-bottom: 5px;
-        }
-        /* Dark Mode Tag Colors */
-        .tag.tequila { background-color: #1e4620; color: #a6d9a6; }
-        .tag.mezcal { background-color: #5c1c22; color: #f5c6cb; }
-        .tag.blanco { background-color: #132d4f; color: #b3d1ff; }
-        .tag.reposado { background-color: #664d03; color: #ffeeba; }
-        .tag.anejo { background-color: #5c1c22; color: #f5c6cb; } /* Same as Mezcal */
-        .tag.cristalino { background-color: #0c3c45; color: #a7e9f5; }
-        .tag.extra-anejo { background-color: #664d03; color: #ffeeba; } /* Same as Reposado */
-        .tag.joven { background-color: #4a4e51; color: #dde1e4; }
-        .tag.lowlands { background-color: #664d03; color: #ffeeba; } /* Same as Reposado */
-        .tag.highlands { background-color: #1e4620; color: #a6d9a6; } /* Same as Tequila */
-        .tag.blend { background-color: #132d4f; color: #b3d1ff; } /* Same as Blanco */
-        .tag.single-estate { background-color: #3a3e41; color: #c6c8ca; }
-        .tag.additive-free { background-color: #0c3c45; color: #a7e9f5; } /* Same as Cristalino */
-        .tag.slightly-aged { background-color: #664d03; color: #ffeeba; } /* Same as Reposado */
-        .tag.original-reposado { background-color: #664d03; color: #ffeeba; } /* Same as Reposado */
-        .tag.woman-led { background-color: #5c1c22; color: #f5c6cb; } /* Same as Mezcal */
-        .tag.artesanal { background-color: #4a4e51; color: #dde1e4; } /* Same as Joven */
-        .tag.single-village { background-color: #3a3e41; color: #c6c8ca; } /* Same as Single Estate */
-        .tag.art-bottle { background-color: #5c1c22; color: #f5c6cb; } /* Same as Mezcal */
-        .tag.tahona { background-color: #3a3e41; color: #c6c8ca; } /* Same as Single Estate */
-        .tag.luxury { background-color: #4a4e51; color: #dde1e4; } /* Same as Joven */
-        .tag.tobala { background-color: #1e4620; color: #a6d9a6; } /* Same as Tequila */
-        .tag.espadin { background-color: #5c1c22; color: #f5c6cb; } /* Same as Mezcal */
-        .tag.oaxaca { background-color: #132d4f; color: #b3d1ff; } /* Same as Blanco */
-
-
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
-        @keyframes fadeInCard {
-            from { opacity: 0; transform: translateY(15px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-
-        /* --- Responzivní úpravy & Mobile Menu Logic --- */
-         @media (max-width: 768px) {
-             .page-container { flex-direction: column; }
-             #menu-toggle { display: block; }
-             #sidebar {
-                 position: fixed; top: 0; left: 0; width: 280px; max-width: 85%;
-                 height: 100vh; border-right: 1px solid #444; border-bottom: none;
-                 transform: translateX(-100%);
-                 box-shadow: 3px 0 6px rgba(0,0,0,0.4);
-             }
-             body.sidebar-visible #sidebar { transform: translateX(0); }
-             #main-content {
-                 width: 100%; flex-grow: 1; margin-left: 0;
-                 padding-top: 60px; /* Space for toggle button */
-             }
-            .spirit-card { max-width: 100%; }
-             #main-content.single-bottle-view .spirit-card.visible { max-width: 95%; }
-             .category-info { padding: 15px; }
-             .category-info h2 { font-size: 1.6em; }
-             .category-info h3 { font-size: 1.2em; }
-             #brand-title-display { font-size: 1.6em; }
-         }
-
-    </style>
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
 
-    <button id="menu-toggle">☰</button>
-
     <div class="page-container">
 
+        <div class="top-bar">
+            <button id="menu-toggle">☰</button>
+            <h1>Průvodce Tequilou</h1>
+        </div>
+
         <aside id="sidebar">
-            <h3>Navigace</h3>
-            <a href="#" id="show-summary" class="sidebar-link">Shrnutí & Kategorie</a>
-            <a href="#" id="show-all-bottles" class="sidebar-link">Zobrazit Všechny Lahve</a>
-
-            <div class="category-divider"></div>
-
             <ul>
+                <li><a href="#" id="show-summary" class="sidebar-link" style="font-size: 1.2em; font-weight: 700; padding: 12px; margin-bottom: 8px; color: black;">Shrnutí</a></li>
+                <li><a href="#" id="show-categories" class="sidebar-link" style="font-size: 1.2em; font-weight: 700; padding: 12px; margin-bottom: 8px; color: black;">Kategorie</a></li>
+                <li><a href="#" id="show-all-bottles" class="sidebar-link" style="font-size: 1.2em; font-weight: 700; padding: 12px; margin-bottom: 8px; color: black;">Všechny lahve</a></li>
+                <li class="category-divider"></li>
                 <li>
-                    <span class="category-name">Tequila Blanco</span>
+                    <span class="category-name">Blanco</span>
                     <ul class="bottle-list">
-                        <li><a href="#" class="bottle-link sidebar-link" data-target="card-volcan-tahona">Volcan Blanco Tahona (2024)</a></li>
-                        <li><a href="#" class="bottle-link sidebar-link" data-target="card-dj-blanco">Don Julio Blanco</a></li>
-                        <li><a href="#" class="bottle-link sidebar-link" data-target="card-dagustin-blanco">Don Agustin Blanco</a></li>
-                        <li><a href="#" class="bottle-link sidebar-link" data-target="card-ocho-blanco">Ocho Blanco</a></li>
-                        <li><a href="#" class="bottle-link sidebar-link" data-target="card-arette-blanco">Arette Blanco (Suave)</a></li>
-                        <li><a href="#" class="bottle-link sidebar-link" data-target="card-herradura-blanco">Herradura Silver (Blanco)</a></li>
-                        <li><a href="#" class="bottle-link sidebar-link" data-target="card-dramon-blanco">Don Ramon Plata (Blanco)</a></li>
+                        <li><a href="#" class="bottle-link sidebar-link" data-target="volcan-blanco-tahona">Volcan Blanco Tahona</a></li>
+                        <li><a href="#" class="bottle-link sidebar-link" data-target="don-julio-blanco">Don Julio Blanco</a></li>
+                        <li><a href="#" class="bottle-link sidebar-link" data-target="ocho-blanco">Ocho Blanco</a></li>
+                        <li><a href="#" class="bottle-link sidebar-link" data-target="arette-blanco">Arette Blanco</a></li>
+                        <li><a href="#" class="bottle-link sidebar-link" data-target="herradura-blanco">Herradura Blanco</a></li>
+                        <li><a href="#" class="bottle-link sidebar-link" data-target="casamigos-blanco">Casamigos Blanco</a></li>
+                        <li><a href="#" class="bottle-link sidebar-link" data-target="volcan-blanco">Volcan Blanco</a></li>
+                        <li><a href="#" class="bottle-link sidebar-link" data-target="don-ramon-blanco">Don Ramon Blanco</a></li>
                     </ul>
                 </li>
                 <li>
-                    <span class="category-name">Tequila Reposado</span>
+                    <span class="category-name">Reposado</span>
                     <ul class="bottle-list">
-                        <li><a href="#" class="bottle-link sidebar-link" data-target="card-dj-reposado">Don Julio Reposado</a></li>
-                        <li><a href="#" class="bottle-link sidebar-link" data-target="card-arette-reposado">Arette Reposado (Suave)</a></li>
-                        <li><a href="#" class="bottle-link sidebar-link" data-target="card-ltt-reposado">Los Tres Tonos Reposado</a></li>
-                        <li><a href="#" class="bottle-link sidebar-link" data-target="card-herradura-reposado">Herradura Reposado</a></li>
-                        <li><a href="#" class="bottle-link sidebar-link" data-target="card-gritona-reposado">La Gritona Reposado</a></li>
+                        <li><a href="#" class="bottle-link sidebar-link" data-target="volcan-reposado">Volcan Reposado</a></li>
+                        <li><a href="#" class="bottle-link sidebar-link" data-target="don-julio-reposado">Don Julio Reposado</a></li>
+                        <li><a href="#" class="bottle-link sidebar-link" data-target="arette-reposado">Arette Reposado</a></li>
+                        <li><a href="#" class="bottle-link sidebar-link" data-target="ltt-reposado">Los Tres Tonos Reposado</a></li>
+                        <li><a href="#" class="bottle-link sidebar-link" data-target="gritona-reposado">La Gritona Reposado</a></li>
+                        <li><a href="#" class="bottle-link sidebar-link" data-target="casamigos-reposado">Casamigos Reposado</a></li>
                     </ul>
                 </li>
-                 <li>
-                    <span class="category-name">Tequila Añejo / Speciální</span>
+                <li>
+                    <span class="category-name">Anejo</span>
                     <ul class="bottle-list">
-                        <li><a href="#" class="bottle-link sidebar-link" data-target="card-dj-anejo">Don Julio Añejo</a></li>
-                        <li><a href="#" class="bottle-link sidebar-link" data-target="card-dj-1942">Don Julio 1942 (2002)</a></li>
-                        <li><a href="#" class="bottle-link sidebar-link" data-target="card-volcan-xa">Volcan X.A (2022)</a></li>
+                        <li><a href="#" class="bottle-link sidebar-link" data-target="don-julio-anejo">Don Julio Anejo</a></li>
+                        <li><a href="#" class="bottle-link sidebar-link" data-target="don-julio-1942">Don Julio 1942</a></li>
+                        <li><a href="#" class="bottle-link sidebar-link" data-target="volcan-xa">Volcan XA</a></li>
+                        <li><a href="#" class="bottle-link sidebar-link" data-target="casamigos-anejo">Casamigos Añejo</a></li>
                     </ul>
                 </li>
-                 <li>
-                    <span class="category-name">Tequila Cristalino</span>
+                <li>
+                    <span class="category-name">Cristalino</span>
                     <ul class="bottle-list">
-                         <li><a href="#" class="bottle-link sidebar-link" data-target="card-volcan-cristalino">Volcan Cristalino</a></li>
-                         <li><a href="#" class="bottle-link sidebar-link" data-target="card-dramon-cristalino">Don Ramon Cristalino</a></li>
+                        <li><a href="#" class="bottle-link sidebar-link" data-target="volcan-cristalino">Volcan Cristalino</a></li>
                     </ul>
                 </li>
-                 <li>
+                <li>
                     <span class="category-name">Mezcal</span>
                     <ul class="bottle-list">
-                        <li><a href="#" class="bottle-link sidebar-link" data-target="card-reycampero-espadin">Rey Campero Espadín</a></li>
-                        <li><a href="#" class="bottle-link sidebar-link" data-target="card-sancosme-joven">San Cosme Joven</a></li>
-                        <li><a href="#" class="bottle-link sidebar-link" data-target="card-ojodetigre-joven">Ojo de Tigre Joven</a></li>
-                        <li><a href="#" class="bottle-link sidebar-link" data-target="card-delmaguey-vida">Del Maguey Vida</a></li>
-                        <li><a href="#" class="bottle-link sidebar-link" data-target="card-contraluz-cristalino">Contraluz Cristalino Mezcal</a></li>
-                        <li><a href="#" class="bottle-link sidebar-link" data-target="card-quiereme-mucho">Quiéreme Mucho (Různé)</a></li>
+                        <li><a href="#" class="bottle-link sidebar-link" data-target="ojodetigre-joven">Ojo de Tigre Joven</a></li>
+                        <li><a href="#" class="bottle-link sidebar-link" data-target="quiereme-mucho">Quiéreme Mucho</a></li>
+                        <li><a href="#" class="bottle-link sidebar-link" data-target="contraluz-cristalino">Contraluz Cristalino</a></li>
+                        <li><a href="#" class="bottle-link sidebar-link" data-target="siete-misterios-doba-yej">Los Siete Misterios Doba-Yej</a></li>
+                    </ul>
+                </li>
+                <li>
+                    <span class="category-name">Ochucené</span>
+                    <ul class="bottle-list">
+                        <li><a href="#" class="bottle-link sidebar-link" data-target="cazcabel-coconut">Cazcabel Coconut</a></li>
                     </ul>
                 </li>
             </ul>
@@ -376,905 +81,1317 @@
         <main id="main-content">
 
             <header class="main-header">
-                <h1>Průvodce Agávovými Destiláty pro Obsluhu</h1>
-                <p>Rychlý přehled příběhů, faktů, specifikací, prodejních argumentů & párování.</p>
+                <h1 id="main-header-title">Shrnutí Agávových Destilátů</h1>
             </header>
-
             <h2 id="brand-title-display"></h2>
+            <h2 id="all-bottles-title" style="display: none;">Všechny lahve</h2>
 
-            <div class="category-info">
-                <h2>Shrnutí & Kategorie Agávových Destilátů</h2>
-                <p>Vítejte v průvodci světem tequily a mezcalu! Níže najdete základní informace o jednotlivých typech a jejich charakteristikách, které vám pomohou s výběrem a doporučením pro hosty.</p>
-
+            <div class="summary-info">
                 <h3>Tequila</h3>
                 <p>Tequila je specifický typ mezcalu, vyráběný výhradně z <strong>Agave tequilana Weber Azul</strong> (Modrá Weber agáve) vymezených oblastech Mexika, primárně ve státě Jalisco. Kvalitní tequila je vždy označena jako "100% de Agave".</p>
-                <ul>
-                    <li><strong>Blanco (Silver, Plata):</strong>
-                        <ul>
-                            <li><strong>Zrání:</strong> 0-2 měsíce (ocelové tanky nebo neutrální dub).</li>
-                            <li><strong>Chuť:</strong> Čistá, svěží agáve, citrusy (limetka, grapefruit), pepř, někdy bylinné nebo zemité tóny (dle regionu - Vysočiny ovocnější, Nížiny zemitější).</li>
-                            <li><strong>Použití:</strong> Výborná do koktejlů (Margarita, Paloma, Tequila Soda), kvalitní se skvěle pije čistá.</li>
-                            <li><strong>Párování:</strong> Ceviche, guacamole, lehké saláty, mořské plody, tacos al pastor.</li>
-                        </ul>
-                    </li>
-                     <li><strong>Reposado ("Odpočatá"):</strong>
-                        <ul>
-                            <li><strong>Zrání:</strong> 2-12 měsíců (typicky v sudech po americké whiskey).</li>
-                            <li><strong>Chuť:</strong> Jemnější než Blanco, zachovává agáve, přidává tóny vanilky, karamelu, skořice, lehkého dubu. Vyvážená.</li>
-                            <li><strong>Použití:</strong> Univerzální - k popíjení čistá, na ledu, nebo do prémiových koktejlů (Reposado Old Fashioned, vylepšená Margarita).</li>
-                             <li><strong>Párování:</strong> Grilované kuře/vepřové, carnitas, bohatší ryby, měkké sýry, kukuřičné pokrmy.</li>
-                        </ul>
-                    </li>
-                    <li><strong>Añejo ("Stařená"):</strong>
-                        <ul>
-                             <li><strong>Zrání:</strong> 1-3 roky (dubové sudy do 600l).</li>
-                             <li><strong>Chuť:</strong> Komplexní, hladká. Výraznější dub, karamel, máslový karamel, čokoláda, sušené ovoce, koření. Agáve je stále přítomná, ale jemnější.</li>
-                             <li><strong>Použití:</strong> Primárně k popíjení čistá, jako digestiv. Alternativa k whisky nebo koňaku.</li>
-                             <li><strong>Párování:</strong> Grilované steaky, jehněčí, mole, tmavá čokoláda, flan, doutníky.</li>
-                        </ul>
-                    </li>
-                     <li><strong>Extra Añejo ("Extra Stařená"):</strong>
-                        <ul>
-                            <li><strong>Zrání:</strong> Více než 3 roky (dubové sudy do 600l).</li>
-                            <li><strong>Chuť:</strong> Velmi bohatá, komplexní, hedvábná. Hluboké tóny dřeva, kůže, tabáku, pražených ořechů, sladkého koření.</li>
-                            <li><strong>Použití:</strong> Výhradně k pomalému vychutnávání čistá.</li>
-                            <li><strong>Párování:</strong> Podobně jako Añejo, ale k ještě bohatším dezertům nebo samostatně.</li>
-                        </ul>
-                     </li>
-                     <li><strong>Cristalino:</strong>
-                        <ul>
-                            <li><strong>Proces:</strong> Stařená tequila (Añejo, E-A, Reposado, směs) filtrovaná přes dřevěné uhlí pro odstranění barvy.</li>
-                            <li><strong>Chuť:</strong> Kombinuje hladkost a komplexnost (vanilka, karamel) stařené tequily s čirým vzhledem a někdy ostřejšími tóny Blanco.</li>
-                            <li><strong>Použití:</strong> K popíjení, pro ty, kdo hledají hladkost stařené tequily bez barvy.</li>
-                            <li><strong>Párování:</strong> Grilované bílé ryby, hřebenatky, krémové omáčky, lehčí sýry.</li>
-                        </ul>
-                     </li>
-                     <li><strong>Joven (Gold, Oro):</strong>
-                        <ul>
-                            <li><strong>Definice:</strong> Může být směs Blanco s malým množstvím stařené tequily (kvalitní verze), nebo "Mixto" (min. 51% agáve) s přidaným barvivem/ochucovadly (méně kvalitní).</li>
-                            <li><strong>Chuť:</strong> Variabilní. Kvalitní Joven (např. Volcan XA) je komplexní směs. Běžné "Gold" jsou často sladší a jednodušší.</li>
-                            <li><strong>Použití:</strong> Kvalitní Joven k popíjení, běžné "Gold" spíše do jednoduchých míchaných nápojů.</li>
-                        </ul>
-                     </li>
-                </ul>
-
                 <h3>Mezcal</h3>
                 <p>Destilát vyráběný z různých druhů agáve (nejčastěji Espadín, ale desítky dalších) v různých regionech Mexika (primárně Oaxaca). Charakteristické je pečení agáve v podzemních pecích, které dodává typické kouřové aroma.</p>
-                 <ul>
-                    <li><strong>Joven (Blanco):</strong>
-                        <ul>
-                            <li><strong>Zrání:</strong> Nestařený.</li>
-                            <li><strong>Chuť:</strong> Přímý výraz použité agáve a procesu. Kouřové tóny (od jemných po intenzivní), ovocné, bylinné, zemité, minerální tóny podle druhu agáve a terroir.</li>
-                            <li><strong>Použití:</strong> K popíjení (pro ocenění komplexnosti), skvělý základ pro koktejly (Mezcal Margarita, Naked and Famous, Mezcal Negroni).</li>
-                            <li><strong>Párování:</strong> Oaxacká kuchyně (mole, tlayudas), grilovaná masa, pikantní jídla, citrusové saláty s chilli, tmavá čokoláda.</li>
-                        </ul>
-                    </li>
-                     <li><strong>Reposado & Añejo:</strong>
-                        <ul>
-                            <li><strong>Zrání:</strong> Reposado (2-12 měsíců), Añejo (min. 1 rok).</li>
-                            <li><strong>Chuť:</strong> Kombinují charakter agáve a kouře s vlivem sudu (vanilka, karamel, koření). Kouř bývá jemnější než u Joven.</li>
-                            <li><strong>Použití:</strong> Často k popíjení, mohou fungovat i v robustnějších koktejlech.</li>
-                             <li><strong>Párování:</strong> Podobně jako Joven, ale hodí se i k dušeným masům, pečené zelenině, polotvrdým sýrům.</li>
-                        </ul>
-                     </li>
-                     <li><strong>Artesanal / Ancestral:</strong> Kategorie definující tradičnost výrobních metod (např. mletí kamenem tahona, destilace v hliněných kotlících u Ancestral). Obvykle značí vyšší kvalitu a komplexnost.</li>
-                 </ul>
             </div>
 
+            <div class="categories-info" style="display: none;">
+                <h3>Tequila</h3>
+                <div class="category-type">
+                    <h4>Blanco (Silver, Plata)</h4>
+                    <ul>
+                        <li><strong>Zrání:</strong> 0-2 měsíce</li>
+                        <li><strong>Chuť:</strong> Čistá, svěží agáve, citrusy (limetka, grapefruit), pepř, někdy bylinné nebo zemité tóny (dle regionu - Vysočiny ovocnější, Nížiny zemitější).</li>
+                        <li><strong>Použití:</strong> Primárně k popíjení čistá, aperitivní. Alternativa k vodce, slivovici.</li>
+                        <li><strong>Párování:</strong> Ceviche, guacamole, lehké saláty, mořské plody, tacos.</li>
+                    </ul>
+                </div>
+
+                <div class="category-type">
+                    <h4>Reposado ("Odpočatá")</h4>
+                    <ul>
+                        <li><strong>Zrání:</strong> 2-12 měsíců (dubové sudy).</li>
+                        <li><strong>Chuť:</strong> Jemnější než Blanco, zachovává agáve, přidává tóny vanilky, karamelu, skořice, lehkého dubu. Vyvážená.</li>
+                        <li><strong>Použití:</strong> Primárně k popíjení čistá, k jídlu. Alternativa k rumu.</li>
+                        <li><strong>Párování:</strong> Grilované kuře/vepřové, carnitas, bohatší ryby, kukuřičné pokrmy.</li>
+                    </ul>
+                </div>
+
+                <div class="category-type">
+                    <h4>Añejo ("Stařená")</h4>
+                    <ul>
+                        <li><strong>Zrání:</strong> 1-3 roky (dubové sudy do 600l).</li>
+                        <li><strong>Chuť:</strong> Komplexní, hladká. Výraznější dub, karamel, máslový karamel, čokoláda, sušené ovoce, koření. Agáve je stále přítomná, ale jemnější.</li>
+                        <li><strong>Použití:</strong> Primárně k popíjení čistá, jako digestiv. Alternativa k whisky nebo koňaku.</li>
+                        <li><strong>Párování:</strong> Grilované steaky, jehněčí, mole, tmavá čokoláda, flan, doutníky.</li>
+                    </ul>
+                </div>
+
+                <div class="category-type">
+                    <h4>Extra Añejo ("Extra Stařená")</h4>
+                    <ul>
+                        <li><strong>Zrání:</strong> Více než 3 roky (dubové sudy do 600l).</li>
+                        <li><strong>Chuť:</strong> Velmi bohatá, komplexní, hedvábná. Hluboké tóny dřeva, kůže, tabáku, pražených ořechů, sladkého koření.</li>
+                        <li><strong>Použití:</strong> Výhradně k pomalému vychutnávání čistá.</li>
+                        <li><strong>Párování:</strong> Podobně jako Añejo, ale k ještě bohatším dezertům nebo samostatně.</li>
+                    </ul>
+                </div>
+
+                <div class="category-type">
+                    <h4>Cristalino</h4>
+                    <ul>
+                        <li><strong>Proces:</strong> Stařená tequila (Añejo, E-A, Reposado, směs) filtrovaná přes dřevěné uhlí pro odstranění barvy.</li>
+                        <li><strong>Chuť:</strong> Kombinuje hladkost a komplexnost (vanilka, karamel) stařené tequily s čirým vzhledem a někdy ostřejšími tóny Blanco.</li>
+                        <li><strong>Použití:</strong> K popíjení, pro ty, kdo hledají hladkost stařené tequily bez barvy. Alternativa k ginu.</li>
+                        <li><strong>Párování:</strong> Grilované bílé ryby, hřebenatky, krémové omáčky, lehčí sýry.</li>
+                    </ul>
+                </div>
+
+                <div class="category-type">
+                    <h4>Joven</h4>
+                    <ul>
+                        <li><strong>Definice:</strong> Může být směs Blanco s malým množstvím stařené tequily.</li>
+                        <li><strong>Chuť:</strong> Variabilní. Kvalitní Joven (např. Volcan XA) je komplexní směs.</li>
+                    </ul>
+                </div>
+
+                <div class="category-type">
+                    <h4>Gold</h4>
+                    <ul>
+                        <li><strong>Definice:</strong> "Mixto" (min. 51% agáve) s přidaným barvivem/ochucovadly (méně kvalitní).</li>
+                        <li><strong>Chuť:</strong> Běžné "Gold" jsou často sladší a jednodušší.</li>
+                    </ul>
+                </div>
+
+                <h3>Mezcal</h3>
+                <div class="category-type">
+                    <h4>Joven (Blanco)</h4>
+                    <ul>
+                        <li><strong>Zrání:</strong> Nestařený.</li>
+                        <li><strong>Chuť:</strong> Přímý výraz použité agáve a procesu. Kouřové tóny (od jemných po intenzivní), ovocné, bylinné, zemité, minerální tóny podle druhu agáve a terroir.</li>
+                        <li><strong>Použití:</strong> K popíjení (pro ocenění komplexnosti), skvělý základ pro koktejly (Mezcal Margarita, Naked and Famous, Mezcal Negroni).</li>
+                        <li><strong>Párování:</strong> Oaxacká kuchyně (mole, tlayudas), grilovaná masa, pikantní jídla, citrusové saláty s chilli, tmavá čokoláda.</li>
+                    </ul>
+                </div>
+
+                <div class="category-type">
+                    <h4>Reposado & Añejo</h4>
+                    <ul>
+                        <li><strong>Zrání:</strong> Reposado (2-12 měsíců), Añejo (min. 1 rok).</li>
+                        <li><strong>Chuť:</strong> Kombinují charakter agáve a kouře s vlivem sudu (vanilka, karamel, koření). Kouř bývá jemnější než u Joven.</li>
+                    </ul>
+                </div>
+
+                <div class="category-type">
+                    <h4>Artesanal / Ancestral</h4>
+                    <ul>
+                        <li>Kategorie definující tradičnost výrobních metod (např. mletí kamenem tahona, destilace v hliněných kotlících u Ancestral). Obvykle značí vyšší kvalitu a komplexnost.</li>
+                    </ul>
+                </div>
+            </div>
 
             <div class="spirits-container">
-
-                <article class="spirit-card" id="card-volcan-xa" data-brand="volcan-de-mi-tierra">
-                    <div class="spirit-image">
-                        <img src="https://www.excaliburshop.com/uploads/item/10505/template/108/images/0-tequila-volcan-de-mi-tierra-x-a-0-7l-40-darkove-baleni-102823.jpg" alt="Lahev Volcan XA">
+                <!-- Grid of bottle squares -->
+                <div class="bottles-grid">
+                    <div class="bottles-section">
+                        <h3 class="category-header">Blanco</h3>
+                        <a href="#" class="bottle-square" data-target="volcan-blanco-tahona">
+                            <h3>Volcan Blanco Tahona</h3>
+                        </a>
+                        <a href="#" class="bottle-square" data-target="don-julio-blanco">
+                            <h3>Don Julio Blanco</h3>
+                        </a>
+                        <a href="#" class="bottle-square" data-target="ocho-blanco">
+                            <h3>Ocho Blanco</h3>
+                        </a>
+                        <a href="#" class="bottle-square" data-target="arette-blanco">
+                            <h3>Arette Blanco</h3>
+                        </a>
+                        <a href="#" class="bottle-square" data-target="herradura-blanco">
+                            <h3>Herradura Blanco</h3>
+                        </a>
+                        <a href="#" class="bottle-square" data-target="casamigos-blanco">
+                            <h3>Casamigos Blanco</h3>
+                        </a>
+                        <a href="#" class="bottle-square" data-target="volcan-blanco">
+                            <h3>Volcan Blanco</h3>
+                        </a>
+                        <a href="#" class="bottle-square" data-target="don-ramon-blanco">
+                            <h3>Don Ramon Blanco</h3>
+                        </a>
                     </div>
-                    <div class="spirit-content">
-                        <h2><a href="#" class="brand-link-internal" data-brand-target="volcan-de-mi-tierra">Volcan De Mi Tierra</a> X.A (2022)</h2>
-                         <h3>Příběh & Fakta</h3>
-                        <p>Pojmenováno po sopce Tequila poblíž lihovaru. X.A znamená "Extra Ages" (Extra Stařené). Směs tequil Reposado, Añejo a Extra-Añejo, vytvářející komplexní Joven výraz. Zaměřuje se na terroir (agáve z Vysočiny a Nížin). Partnerství mezi Moët Hennessy a rodinou Gallardo.</p>
-                        <h3>Technické Parametry</h3>
-                        <ul>
-                            <li><strong>Typ:</strong> Tequila (Joven Směs)</li>
-                            <li><strong>Agáve:</strong> 100% Modrá Weber (Vysočiny & Nížiny)</li>
-                            <li><strong>Region:</strong> Jalisco, Mexiko (Lihovar v Nížinách)</li>
-                            <li><strong>Vaření:</strong> Kamenná/cihlová pec & Autokláv</li>
-                            <li><strong>Extrakce:</strong> Tahona & Válcový mlýn</li>
-                            <li><strong>Fermentace:</strong> Nerezové tanky</li>
-                            <li><strong>Destilace:</strong> Měděný kotlíkový destilační přístroj</li>
-                            <li><strong>Zrání:</strong> Směs Reposado, Añejo, Extra-Añejo v sudech "Grace Cask" (americký bílý dub)</li>
-                            <li><strong>ABV:</strong> 40%</li>
-                        </ul>
-                        <h3>Prodejní Argumenty</h3>
-                        <ul>
-                            <li>Unikátní směs ukazující komplexnost nad rámec jednoho typu zrání.</li>
-                            <li>Luxusní prezentace, skvělá pro oslavy.</li>
-                            <li>Jemný, bohatý profil s tóny vařené agáve, vanilky, karamelu, sušeného ovoce a lehkého koření.</li>
-                            <li>Osloví jak znalce, tak ty, kdo hledají prémiový, jemný doušek.</li>
-                        </ul>
-                        <h3>Párování s Jídlem</h3>
-                        <p>Bohatá jídla jako grilovaný steak, dezerty z tmavé čokolády, crème brûlée, nebo si ji vychutnejte čistou po večeři.</p>
-                        <div class="tags">
-                            <span class="tag tequila">Tequila</span> <span class="tag joven">Joven (Směs)</span> <span class="tag extra-anejo">Stařená Směs</span> <span class="tag blend">Směs</span> <span class="tag luxury">Luxusní</span>
+
+                    <div class="bottles-section">
+                        <h3 class="category-header">Reposado</h3>
+                        <a href="#" class="bottle-square" data-target="volcan-reposado">
+                            <h3>Volcan Reposado</h3>
+                        </a>
+                        <a href="#" class="bottle-square" data-target="don-julio-reposado">
+                            <h3>Don Julio Reposado</h3>
+                        </a>
+                        <a href="#" class="bottle-square" data-target="arette-reposado">
+                            <h3>Arette Reposado</h3>
+                        </a>
+                        <a href="#" class="bottle-square" data-target="ltt-reposado">
+                            <h3>Los Tres Tonos Reposado</h3>
+                        </a>
+                        <a href="#" class="bottle-square" data-target="gritona-reposado">
+                            <h3>La Gritona Reposado</h3>
+                        </a>
+                        <a href="#" class="bottle-square" data-target="casamigos-reposado">
+                            <h3>Casamigos Reposado</h3>
+                        </a>
+                    </div>
+
+                    <div class="bottles-section">
+                        <h3 class="category-header">Añejo</h3>
+                        <a href="#" class="bottle-square" data-target="don-julio-anejo">
+                            <h3>Don Julio Añejo</h3>
+                        </a>
+                        <a href="#" class="bottle-square" data-target="don-julio-1942">
+                            <h3>Don Julio 1942</h3>
+                        </a>
+                        <a href="#" class="bottle-square" data-target="volcan-xa">
+                            <h3>Volcan XA</h3>
+                        </a>
+                        <a href="#" class="bottle-square" data-target="casamigos-anejo">
+                            <h3>Casamigos Añejo</h3>
+                        </a>
+                    </div>
+
+                    <div class="bottles-section">
+                        <h3 class="category-header">Cristalino</h3>
+                        <a href="#" class="bottle-square" data-target="volcan-cristalino">
+                            <h3>Volcan Cristalino</h3>
+                        </a>
+                    </div>
+
+                    <div class="bottles-section">
+                        <h3 class="category-header">Mezcal</h3>
+                        <a href="#" class="bottle-square" data-target="ojodetigre-joven">
+                            <h3>Ojo de Tigre Joven</h3>
+                        </a>
+                        <a href="#" class="bottle-square" data-target="quiereme-mucho">
+                            <h3>Quiéreme Mucho</h3>
+                        </a>
+                        <a href="#" class="bottle-square" data-target="contraluz-cristalino">
+                            <h3>Contraluz Cristalino</h3>
+                        </a>
+                        <a href="#" class="bottle-square" data-target="siete-misterios-doba-yej">
+                            <h3>Los Siete Misterios Doba-Yej</h3>
+                        </a>
+                    </div>
+
+                    <div class="bottles-section">
+                        <h3 class="category-header">Ochucené</h3>
+                        <a href="#" class="bottle-square" data-target="cazcabel-coconut">
+                            <h3>Cazcabel Coconut</h3>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Detailed spirit cards (hidden by default) -->
+                <div class="spirit-cards-container" style="display: none;">
+                   <!-- Blanco Tequilas -->
+                    <div class="spirit-card" data-category="blanco" id="volcan-blanco-tahona">
+                        <div class="spirit-content">
+                            <div class="card-header">
+                                <h3>Volcan Blanco Tahona</h3>
+                            </div>
+                            <div class="story-section">
+                                <h4>Příběh</h4>
+                                <p>Volcan Blanco Tahona je prémiová tequila vyráběná tradičním způsobem v malých várkách. Jejím základem je 100% modrá agáve, která roste ve vulkanické půdě v oblasti Jalisco. Název "Tahona" odkazuje na tradiční metodu drcení agáve pomocí kamenného mlýnského kola, což dodává tequile jedinečný charakter a hloubku.</p>
+                            </div>
+                            <div class="taste-profile-section">
+                                <h4>Chuťový profil</h4>
+                                <ul>
+                                    <li><strong>Vůně:</strong> Svěží agáve, citrusové tóny, minerální nuance</li>
+                                    <li><strong>Chuť:</strong> Výrazná agáve, pepřové tóny, jemná sladkost</li>
+                                    <li><strong>Dozvuk:</strong> Středně dlouhý, s minerálními tóny</li>
+                                </ul>
+                            </div>
+                            <div class="technical-section">
+                                <h4>Technické parametry</h4>
+                                <ul>
+                                    <li><strong>Typ:</strong> Blanco (Silver)</li>
+                                    <li><strong>Obsah alkoholu:</strong> 40%</li>
+                                    <li><strong>Výrobní proces:</strong> Tradiční tahona mletí</li>
+                                    <li><strong>Stárnutí:</strong> Nestařená</li>
+                                </ul>
+                            </div>
+                            <div class="pairing-suggestions">
+                                <h4>Doporučené párování</h4>
+                                <ul>
+                                    <li>Ceviche</li>
+                                    <li>Guacamole</li>
+                                    <li>Lehké saláty</li>
+                                    <li>Mořské plody</li>
+                                    <li>Tacos</li>
+                                </ul>
+                            </div>
+                            <div class="price-section">
+                                <h4>Cena</h4>
+                                <ul>
+                                    <li>399 Kč</li>
+                                </ul>
+                            </div>
                         </div>
                     </div>
-                </article>
 
-
-                <article class="spirit-card" id="card-volcan-cristalino" data-brand="volcan-de-mi-tierra">
-                    <div class="spirit-image">
-                         <img src="https://img.thewhiskyexchange.com/540/teqla_vol5.jpg" alt="Lahev Volcan Cristalino">
-                    </div>
-                    <div class="spirit-content">
-                        <h2><a href="#" class="brand-link-internal" data-brand-target="volcan-de-mi-tierra">Volcan De Mi Tierra</a> Cristalino</h2>
-                         <h3>Příběh & Fakta</h3>
-                        <p>Staví na konceptu terroiru Volcan. Añejo tequila, která je filtrovaná přes dřevěné uhlí pro odstranění barvy při zachování komplexnosti. Cílem je jemnost Añejo s křupavostí často spojovanou s Blancos.</p>
-                        <h3>Technické Parametry</h3>
-                        <ul>
-                            <li><strong>Typ:</strong> Tequila (Cristalino)</li>
-                            <li><strong>Agáve:</strong> 100% Modrá Weber (Vysočiny & Nížiny)</li>
-                            <li><strong>Region:</strong> Jalisco, Mexiko (Lihovar v Nížinách)</li>
-                            <li><strong>Vaření:</strong> Kamenná/cihlová pec & Autokláv</li>
-                            <li><strong>Extrakce:</strong> Tahona & Válcový mlýn</li>
-                            <li><strong>Fermentace:</strong> Nerezové tanky</li>
-                            <li><strong>Destilace:</strong> Měděný kotlíkový destilační přístroj</li>
-                            <li><strong>Zrání:</strong> Añejo (převážně americký dub), poté filtrováno dřevěným uhlím</li>
-                            <li><strong>ABV:</strong> 40%</li>
-                        </ul>
-                        <h3>Prodejní Argumenty</h3>
-                        <ul>
-                            <li>Jemnost stařené tequily bez barvy.</li>
-                            <li>Osloví pijáky vodky/ginu hledající komplexnost.</li>
-                            <li>Elegantní lahev, vhodná jako dárek nebo na vystavení.</li>
-                            <li>Tóny vařené agáve, vanilky, karamelu, ořechů, vyvážené citrusy a kořením.</li>
-                        </ul>
-                        <h3>Párování s Jídlem</h3>
-                        <p>Grilované mořské plody, lehčí maso (vepřové, kuřecí), krémové těstovinové pokrmy, polotvrdé sýry.</p>
-                         <div class="tags">
-                            <span class="tag tequila">Tequila</span> <span class="tag cristalino">Cristalino</span>
+                    <!-- Don Julio Blanco -->
+                    <div class="spirit-card" data-category="blanco" id="don-julio-blanco">
+                        <div class="spirit-content">
+                            <div class="card-header">
+                                <h3>Don Julio Blanco</h3>
+                            </div>
+                            <div class="story-section">
+                                <h4>Příběh</h4>
+                                <p>Don Julio Blanco je ikonická tequila, která definuje standardy pro prémiové blanco tequily. Vyrábí se v malých šaržích pro zajištění konzistentní kvality.</p>
+                            </div>
+                            <div class="taste-profile-section">
+                                <h4>Chuťový profil</h4>
+                                <ul>
+                                    <li><strong>Vůně:</strong> Svěží agáve, citrusy</li>
+                                    <li><strong>Chuť:</strong> Jemná, lehce pepřová</li>
+                                    <li><strong>Dozvuk:</strong> Hladký, čistý</li>
+                                </ul>
+                            </div>
+                            <div class="technical-section">
+                                <h4>Technické parametry</h4>
+                                <ul>
+                                    <li><strong>Typ:</strong> Blanco (Silver)</li>
+                                    <li><strong>Obsah alkoholu:</strong> 40%</li>
+                                    <li><strong>Výrobní proces:</strong> Moderní destilace</li>
+                                    <li><strong>Stárnutí:</strong> Nestařená</li>
+                                </ul>
+                            </div>
+                            <div class="pairing-suggestions">
+                                <h4>Doporučené párování</h4>
+                                <ul>
+                                    <li>Guacamole</li>
+                                    <li>Ceviche</li>
+                                    <li>Tacos</li>
+                                    <li>Lehké saláty</li>
+                                    <li>Mořské plody</li>
+                                </ul>
+                            </div>
+                            <div class="price-section">
+                                <h4>Cena</h4>
+                                <ul>
+                                    <li>159,–</li>
+                                </ul>
+                            </div>
                         </div>
                     </div>
-                </article>
 
-                <article class="spirit-card" id="card-volcan-tahona" data-brand="volcan-de-mi-tierra">
-                    <div class="spirit-image">
-                        <img src="https://www.kuinak.com/system/base_product_images/images/000/031/277/detail/volcan-de-mi-tierra-blanco-tahona-1.jpg?1719534360" alt="Lahev Volcan Blanco Tahona">
-                    </div>
-                    <div class="spirit-content">
-                        <h2><a href="#" class="brand-link-internal" data-brand-target="volcan-de-mi-tierra">Volcan De Mi Tierra</a> Blanco Tahona (2024)</h2>
-                        <h3>Příběh & Fakta</h3>
-                        <p>Zdůrazňuje tradiční metodu extrakce kamenem Tahona, známou pro dodání bohatší chuti a textury agáve. Zaměřuje se specifické zdroje agáve (Vysočiny & Nížiny). Představuje řemeslnější přístup v portfoliu Volcan.</p>
-                        <h3>Technické Parametry</h3>
-                        <ul>
-                            <li><strong>Typ:</strong> Tequila (Blanco)</li>
-                            <li><strong>Agáve:</strong> 100% Modrá Weber (Vysočiny & Nížiny)</li>
-                            <li><strong>Region:</strong> Jalisco, Mexiko</li>
-                            <li><strong>Vaření:</strong> Pravděpodobně Kamenná/cihlová pec</li>
-                            <li><strong>Extrakce:</strong> 100% Tahona</li>
-                            <li><strong>Fermentace:</strong> Pravděpodobně Dřevěné nebo Nerezové tanky</li>
-                            <li><strong>Destilace:</strong> Měděný kotlíkový destilační přístroj</li>
-                            <li><strong>Zrání:</strong> Nestařená</li>
-                            <li><strong>ABV:</strong> 40% (typické)</li>
-                        </ul>
-                        <h3>Prodejní Argumenty</h3>
-                        <ul>
-                            <li>Ukazuje intenzivní, čistý chuťový profil agáve.</li>
-                            <li>Viskózní, olejovitý pocit v ústech charakteristický pro proces Tahona.</li>
-                            <li>Skvělé pro nadšence tequily oceňující tradiční metody.</li>
-                            <li>Vynikající základ pro prémiové koktejly (Paloma, Margarita) nebo k popíjení čisté.</li>
-                            <li>Výrazné zemité, vegetální, citrusové a tóny vařené agáve.</li>
-                        </ul>
-                        <h3>Párování s Jídlem</h3>
-                        <p>Ceviche, čerstvé ústřice, guacamole, saláty s citrusovým vinaigrette, rybí tacos.</p>
-                         <div class="tags">
-                            <span class="tag tequila">Tequila</span> <span class="tag blanco">Blanco</span> <span class="tag tahona">Tahona</span>
+                    <!-- Ocho Blanco -->
+                    <div class="spirit-card" data-category="blanco" id="ocho-blanco">
+                        <div class="spirit-content">
+                            <div class="card-header">
+                                <h3>Ocho Blanco</h3>
+                            </div>
+                            <div class="story-section">
+                                <h4>Příběh</h4>
+                                <p>Ocho Blanco je tequila z jedné konkrétní plantáže (rancho), která zdůrazňuje terroir a charakter agáve z daného místa. Každá šarže je označena rokem a plantáží.</p>
+                            </div>
+                            <div class="taste-profile-section">
+                                <h4>Chuťový profil</h4>
+                                <ul>
+                                    <li><strong>Vůně:</strong> Svěží agáve, citrusy</li>
+                                    <li><strong>Chuť:</strong> Jemná, minerální</li>
+                                    <li><strong>Dozvuk:</strong> Středně dlouhý, čistý</li>
+                                </ul>
+                            </div>
+                            <div class="technical-section">
+                                <h4>Technické parametry</h4>
+                                <ul>
+                                    <li><strong>Typ:</strong> Blanco (Silver)</li>
+                                    <li><strong>Obsah alkoholu:</strong> 40%</li>
+                                    <li><strong>Výrobní proces:</strong> Tradiční destilace</li>
+                                    <li><strong>Stárnutí:</strong> Nestařená</li>
+                                </ul>
+                            </div>
+                            <div class="pairing-suggestions">
+                                <h4>Doporučené párování</h4>
+                                <ul>
+                                    <li>Guacamole</li>
+                                    <li>Ceviche</li>
+                                    <li>Tacos</li>
+                                    <li>Lehké saláty</li>
+                                    <li>Mořské plody</li>
+                                </ul>
+                            </div>
+                            <div class="price-section">
+                                <h4>Cena</h4>
+                                <ul>
+                                    <li>189,–</li>
+                                </ul>
+                            </div>
                         </div>
                     </div>
-                </article>
 
-                <article class="spirit-card" id="card-dj-blanco" data-brand="don-julio">
-                    <div class="spirit-image">
-                        <img src="https://www.heinemann-shop.com/medias/527Wx527H-null?context=bWFzdGVyfGltYWdlc3w1Njc5M3xpbWFnZS9qcGVnfGFEQm1MMmczTlM4eE1USTRORGswTmpjME56UXlNaTgxTWpkWGVEVXlOMGhmYm5Wc2JBfDJjZDZiZGMwNzhjZDVkY2YxYTQxYmQ5YjY0ZjkzMGJlYzdlMTRjZjk0ZDE3YzlmMTU1MTkxMzQ4ODc5Mjk2ZTg&v=1729304248560" alt="Lahev Don Julio Blanco">
-                    </div>
-                    <div class="spirit-content">
-                        <h2><a href="#" class="brand-link-internal" data-brand-target="don-julio">Don Julio</a> Blanco</h2>
-                        <h3>Příběh & Fakta</h3>
-                        <p>Pojmenováno po zakladateli Don Julio Gonzálezovi, který revolucionizoval výrobu tequily zaměřením na kvalitu před kvantitou. Známý prioritizací rozestupů agáve a používáním pouze nejlepších částí piña. Založeno v roce 1942, ale značka, jak ji známe, byla spuštěna později. Standard pro prémiovou Blanco tequilu.</p>
-                        <h3>Technické Parametry</h3>
-                        <ul>
-                            <li><strong>Typ:</strong> Tequila (Blanco)</li>
-                            <li><strong>Agáve:</strong> 100% Modrá Weber</li>
-                            <li><strong>Region:</strong> Jalisco, Mexiko (Vysočiny - Atotonilco El Alto)</li>
-                            <li><strong>Vaření:</strong> Kamenné/cihlové pece</li>
-                            <li><strong>Extrakce:</strong> Válcový mlýn</li>
-                            <li><strong>Fermentace:</strong> Nerezové tanky</li>
-                            <li><strong>Destilace:</strong> Kotlíkové destilační přístroje (měděné obložení)</li>
-                            <li><strong>Zrání:</strong> Nestařená</li>
-                            <li><strong>ABV:</strong> 40%</li>
-                        </ul>
-                        <h3>Prodejní Argumenty</h3>
-                        <ul>
-                            <li>Svěží, čistá chuť agáve s náznaky citrusů (limetka, grapefruit) a pepře.</li>
-                            <li>Široce uznávaná, důvěryhodná prémiová značka.</li>
-                            <li>Všestranná: vynikající k popíjení, na panáky nebo do vysoce kvalitních koktejlů.</li>
-                            <li>Hladký závěr na Blanco.</li>
-                        </ul>
-                        <h3>Párování s Jídlem</h3>
-                        <p>Lehké předkrmy, mořské plody, citrusové saláty, tacos al pastor, guacamole.</p>
-                         <div class="tags">
-                            <span class="tag tequila">Tequila</span> <span class="tag blanco">Blanco</span> <span class="tag highlands">Vysočiny</span>
+                    <!-- Arette Blanco -->
+                    <div class="spirit-card" data-category="blanco" id="arette-blanco">
+                        <div class="spirit-content">
+                            <div class="card-header">
+                                <h3>Arette Blanco</h3>
+                            </div>
+                            <div class="story-section">
+                                <h4>Příběh</h4>
+                                <p>Arette Blanco je tradiční tequila vyráběná v malé palírně v Tequile. Je známá svou čistou chutí a výborným poměrem cena/kvalita.</p>
+                            </div>
+                            <div class="taste-profile-section">
+                                <h4>Chuťový profil</h4>
+                                <ul>
+                                    <li><strong>Vůně:</strong> Svěží agáve, citrusy</li>
+                                    <li><strong>Chuť:</strong> Jemná, čistá</li>
+                                    <li><strong>Dozvuk:</strong> Krátký, čistý</li>
+                                </ul>
+                            </div>
+                            <div class="technical-section">
+                                <h4>Technické parametry</h4>
+                                <ul>
+                                    <li><strong>Typ:</strong> Blanco (Silver)</li>
+                                    <li><strong>Obsah alkoholu:</strong> 40%</li>
+                                    <li><strong>Výrobní proces:</strong> Tradiční destilace</li>
+                                    <li><strong>Stárnutí:</strong> Nestařená</li>
+                                </ul>
+                            </div>
+                            <div class="pairing-suggestions">
+                                <h4>Doporučené párování</h4>
+                                <ul>
+                                    <li>Guacamole</li>
+                                    <li>Ceviche</li>
+                                    <li>Tacos</li>
+                                    <li>Lehké saláty</li>
+                                    <li>Mořské plody</li>
+                                </ul>
+                            </div>
+                            <div class="price-section">
+                                <h4>Cena</h4>
+                                <ul>
+                                    <li>159,–</li>
+                                </ul>
+                            </div>
                         </div>
                     </div>
-                </article>
 
-                <article class="spirit-card" id="card-dj-reposado" data-brand="don-julio">
-                    <div class="spirit-image">
-                        <img src="https://cdn.myshoptet.com/usr/www.topalkohol.cz/user/shop/big/28092_don-julio-reposado-40--0-05l.jpg?67bf1cc9" alt="Lahev Don Julio Reposado">
-                    </div>
-                    <div class="spirit-content">
-                        <h2><a href="#" class="brand-link-internal" data-brand-target="don-julio">Don Julio</a> Reposado</h2>
-                        <h3>Příběh & Fakta</h3>
-                        <p>Původní výraz Dona Julia bylo vlastně Reposado, vytvořené pro jeho osobní potěšení. Zrálo 8 měsíců (déle než minimální 2 měsíce), čímž stanovilo standard pro tuto kategorii.</p>
-                        <h3>Technické Parametry</h3>
-                        <ul>
-                            <li><strong>Typ:</strong> Tequila (Reposado)</li>
-                            <li><strong>Agáve:</strong> 100% Modrá Weber</li>
-                            <li><strong>Region:</strong> Jalisco, Mexiko (Vysočiny)</li>
-                            <li><strong>Vaření:</strong> Kamenné/cihlové pece</li>
-                            <li><strong>Extrakce:</strong> Válcový mlýn</li>
-                            <li><strong>Destilace:</strong> Kotlíkové destilační přístroje</li>
-                            <li><strong>Zrání:</strong> 8 měsíců v sudech z amerického bílého dubu (ex-bourbon)</li>
-                            <li><strong>ABV:</strong> 40%</li>
-                        </ul>
-                        <h3>Prodejní Argumenty</h3>
-                        <ul>
-                            <li>Jemný, lahodný profil s tóny vařené agáve, vanilky, karamelu, skořice a náznaky tmavé čokolády.</li>
-                            <li>Vyvážený mezi charakterem agáve a vlivem dubu.</li>
-                            <li>Skvělý úvod do stařených tequil.</li>
-                            <li>Vynikající k popíjení nebo jako základ pro vylepšené koktejly jako Reposado Old Fashioned.</li>
-                        </ul>
-                        <h3>Párování s Jídlem</h3>
-                        <p>Grilované kuře nebo vepřové, carnitas, bohatší rybí pokrmy, měkké sýry, lehké karamelové dezerty.</p>
-                         <div class="tags">
-                            <span class="tag tequila">Tequila</span> <span class="tag reposado">Reposado</span> <span class="tag highlands">Vysočiny</span>
+                    <!-- Herradura Blanco -->
+                    <div class="spirit-card" data-category="blanco" id="herradura-blanco">
+                        <div class="spirit-content">
+                            <div class="card-header">
+                                <h3>Herradura Blanco</h3>
+                            </div>
+                            <div class="story-section">
+                                <h4>Příběh</h4>
+                                <p>Herradura Blanco je jedna z nejstarších značek tequily, vyráběná od roku 1870. Je známá svou tradiční výrobou a konzistentní kvalitou.</p>
+                            </div>
+                            <div class="taste-profile-section">
+                                <h4>Chuťový profil</h4>
+                                <ul>
+                                    <li><strong>Vůně:</strong> Svěží agáve, citrusy</li>
+                                    <li><strong>Chuť:</strong> Jemná, lehce pepřová</li>
+                                    <li><strong>Dozvuk:</strong> Hladký, čistý</li>
+                                </ul>
+                            </div>
+                            <div class="technical-section">
+                                <h4>Technické parametry</h4>
+                                <ul>
+                                    <li><strong>Typ:</strong> Blanco (Silver)</li>
+                                    <li><strong>Obsah alkoholu:</strong> 40%</li>
+                                    <li><strong>Výrobní proces:</strong> Tradiční destilace</li>
+                                    <li><strong>Stárnutí:</strong> Nestařená</li>
+                                </ul>
+                            </div>
+                            <div class="pairing-suggestions">
+                                <h4>Doporučené párování</h4>
+                                <ul>
+                                    <li>Guacamole</li>
+                                    <li>Ceviche</li>
+                                    <li>Tacos</li>
+                                    <li>Lehké saláty</li>
+                                    <li>Mořské plody</li>
+                                </ul>
+                            </div>
+                            <div class="price-section">
+                                <h4>Cena</h4>
+                                <ul>
+                                    <li>169,–</li>
+                                </ul>
+                            </div>
                         </div>
                     </div>
-                </article>
 
-                <article class="spirit-card" id="card-dj-anejo" data-brand="don-julio">
-                    <div class="spirit-image">
-                        <img src="https://www.alkohol.cz/images/upload/1738568478navrh-bez-nazvu-2025-02-03t084019.999.jpg" alt="Lahev Don Julio Añejo">
-                    </div>
-                    <div class="spirit-content">
-                        <h2><a href="#" class="brand-link-internal" data-brand-target="don-julio">Don Julio</a> Añejo</h2>
-                        <h3>Příběh & Fakta</h3>
-                        <p>Představuje hlubší průzkum zrání v rámci základní řady Don Julio. Zrálo déle než Reposado pro bohatší komplexnost.</p>
-                        <h3>Technické Parametry</h3>
-                        <ul>
-                            <li><strong>Typ:</strong> Tequila (Añejo)</li>
-                            <li><strong>Agáve:</strong> 100% Modrá Weber</li>
-                            <li><strong>Region:</strong> Jalisco, Mexiko (Vysočiny)</li>
-                            <li><strong>Vaření:</strong> Kamenné/cihlové pece</li>
-                            <li><strong>Extrakce:</strong> Válcový mlýn</li>
-                            <li><strong>Destilace:</strong> Kotlíkové destilační přístroje</li>
-                            <li><strong>Zrání:</strong> 18 měsíců v sudech z amerického bílého dubu</li>
-                            <li><strong>ABV:</strong> 40%</li>
-                        </ul>
-                        <h3>Prodejní Argumenty</h3>
-                        <ul>
-                            <li>Bohaté a komplexní, s výraznými tóny máslového karamelu, karamelu, vařené agáve, divokého medu a dubového koření.</li>
-                            <li>Plné tělo a hladké, určené k popíjení.</li>
-                            <li>Osloví pijáky whisky/bourbonu objevující tequilu.</li>
-                            <li>Sofistikovaná alternativa k jiným stařeným destilátům.</li>
-                        </ul>
-                        <h3>Párování s Jídlem</h3>
-                        <p>Grilované steaky, jehněčí kotlety, mole Poblano, tmavá čokoláda, flan, doutníky.</p>
-                         <div class="tags">
-                            <span class="tag tequila">Tequila</span> <span class="tag anejo">Añejo</span> <span class="tag highlands">Vysočiny</span>
+                    <!-- Casamigos Blanco -->
+                    <div class="spirit-card" data-category="blanco" id="casamigos-blanco">
+                        <div class="spirit-content">
+                            <div class="card-header">
+                                <h3>Casamigos Blanco</h3>
+                            </div>
+                            <div class="story-section">
+                                <h4>Příběh</h4>
+                                <p>Casamigos Blanco je prémiová tequila, která vznikla z přátelství mezi Georgem Clooneym a Randym Gerberem. Je známá svou jemností a přístupností, což ji činí ideální pro začátečníky i znalce.</p>
+                            </div>
+                            <div class="taste-profile-section">
+                                <h4>Chuťový profil</h4>
+                                <ul>
+                                    <li><strong>Vůně:</strong> Svěží agáve, citrusy, lehké koření</li>
+                                    <li><strong>Chuť:</strong> Jemná, sladká, s tóny vanilky a citrusů</li>
+                                    <li><strong>Dozvuk:</strong> Hladký, čistý</li>
+                                </ul>
+                            </div>
+                            <div class="technical-section">
+                                <h4>Technické parametry</h4>
+                                <ul>
+                                    <li><strong>Typ:</strong> Blanco</li>
+                                    <li><strong>Obsah alkoholu:</strong> 40%</li>
+                                    <li><strong>Výrobní proces:</strong> Moderní destilace</li>
+                                    <li><strong>Stárnutí:</strong> Nestařená</li>
+                                </ul>
+                            </div>
+                            <div class="pairing-suggestions">
+                                <h4>Doporučené párování</h4>
+                                <ul>
+                                    <li>Guacamole</li>
+                                    <li>Ceviche</li>
+                                    <li>Tacos</li>
+                                    <li>Lehké saláty</li>
+                                    <li>Mořské plody</li>
+                                </ul>
+                            </div>
+                            <div class="price-section">
+                                <h4>Cena</h4>
+                                <ul>
+                                    <li>175,–</li>
+                                </ul>
+                            </div>
                         </div>
                     </div>
-                </article>
 
-                <article class="spirit-card" id="card-dj-1942" data-brand="don-julio">
-                    <div class="spirit-image">
-                        <img src="https://cdn.myshoptet.com/usr/www.stramis.cz/user/shop/big/80808_don-julio-1942-38--0-7l.jpg?62b713d0" alt="Lahev Don Julio 1942">
-                    </div>
-                    <div class="spirit-content">
-                        <h2><a href="#" class="brand-link-internal" data-brand-target="don-julio">Don Julio</a> 1942 (2002)</h2>
-                        <h3>Příběh & Fakta</h3>
-                        <p>Uvedeno na trh v roce 2002 k připomenutí 60. výročí zahájení cesty Dona Julia Gonzáleze ve výrobě tequily (1942). Známé svou výraznou vysokou, elegantní lahví. Stalo se ikonou na trhu luxusních tequil.</p>
-                        <h3>Technické Parametry</h3>
-                        <ul>
-                            <li><strong>Typ:</strong> Tequila (Añejo - často považována stylem bližší Extra Añejo)</li>
-                            <li><strong>Agáve:</strong> 100% Modrá Weber</li>
-                            <li><strong>Region:</strong> Jalisco, Mexiko (Vysočiny)</li>
-                            <li><strong>Vaření:</strong> Kamenné/cihlové pece</li>
-                            <li><strong>Extrakce:</strong> Válcový mlýn</li>
-                            <li><strong>Destilace:</strong> Kotlíkové destilační přístroje (používá se menší kapacita)</li>
-                            <li><strong>Zrání:</strong> Minimálně 2,5 roku v americkém bílém dubu</li>
-                            <li><strong>ABV:</strong> 40%</li>
-                        </ul>
-                        <h3>Prodejní Argumenty</h3>
-                        <ul>
-                            <li>Ikonický status symbol, vysoce rozpoznatelná lahev.</li>
-                            <li>Výjimečně hladký a bohatý profil: Karamel, vanilka, toffee, pražená agáve, tóny tropického ovoce.</li>
-                            <li>Hedvábný, luxusní pocit v ústech.</li>
-                            <li>Perfektní pro zvláštní příležitosti, oslavy a jako dárek.</li>
-                            <li>Často se vychutnává čistá nebo s jednou velkou kostkou ledu.</li>
-                        </ul>
-                        <h3>Párování s Jídlem</h3>
-                        <p>Nejlépe si ji vychutnáte čistou po jídle. Dobře se páruje s bohatými dezerty jako tiramisu, crème brûlée nebo kvalitní tmavou čokoládou.</p>
-                         <div class="tags">
-                            <span class="tag tequila">Tequila</span> <span class="tag anejo">Añejo</span> <span class="tag extra-anejo">Luxusní</span> <span class="tag highlands">Vysočiny</span> <span class="tag luxury">Luxusní</span>
+                    <!-- Volcan Blanco -->
+                    <div class="spirit-card" data-category="blanco" id="volcan-blanco">
+                        <div class="spirit-content">
+                            <div class="card-header">
+                                <h3>Volcan Blanco</h3>
+                            </div>
+                            <div class="story-section">
+                                <h4>Příběh</h4>
+                                <p>Volcan Blanco je tradiční tequila vyráběná v malých várkách. Jejím základem je 100% modrá agáve, která roste ve vulkanické půdě v oblasti Jalisco, což dodává tequile jedinečný minerální charakter.</p>
+                            </div>
+                            <div class="taste-profile-section">
+                                <h4>Chuťový profil</h4>
+                                <ul>
+                                    <li><strong>Vůně:</strong> Svěží agáve, citrusové tóny, minerální nuance</li>
+                                    <li><strong>Chuť:</strong> Výrazná agáve, pepřové tóny, jemná sladkost</li>
+                                    <li><strong>Dozvuk:</strong> Středně dlouhý, s minerálními tóny</li>
+                                </ul>
+                            </div>
+                            <div class="technical-section">
+                                <h4>Technické parametry</h4>
+                                <ul>
+                                    <li><strong>Typ:</strong> Blanco</li>
+                                    <li><strong>Obsah alkoholu:</strong> 40%</li>
+                                    <li><strong>Výrobní proces:</strong> Tradiční destilace</li>
+                                    <li><strong>Stárnutí:</strong> Nestařená</li>
+                                </ul>
+                            </div>
+                            <div class="pairing-suggestions">
+                                <h4>Doporučené párování</h4>
+                                <ul>
+                                    <li>Ceviche</li>
+                                    <li>Guacamole</li>
+                                    <li>Lehké saláty</li>
+                                    <li>Mořské plody</li>
+                                    <li>Tacos</li>
+                                </ul>
+                            </div>
+                            <div class="price-section">
+                                <h4>Cena</h4>
+                                <ul>
+                                    <li>169,–</li>
+                                </ul>
+                            </div>
                         </div>
                     </div>
-                </article>
 
-                <article class="spirit-card" id="card-dagustin-blanco" data-brand="don-agustin">
-                    <div class="spirit-image">
-                        <img src="https://img-cdn.heureka.group/v1/1d85d7bb-1b5e-48fa-9ee2-19e8ebabc7fd.jpg?width=400&height=400" alt="Lahev Don Agustin Blanco">
-                    </div>
-                    <div class="spirit-content">
-                         <h2><a href="#" class="brand-link-internal" data-brand-target="don-agustin">Don Agustin</a> Blanco</h2>
-                         <h3>Příběh & Fakta</h3>
-                        <p>Často pozicována jako cenově orientovaná 100% agávová tequila. Informace mohou být řídké, ale obecně známá pro poskytnutí solidního charakteru agáve za dostupnou cenu.</p>
-                        <h3>Technické Parametry</h3>
-                        <ul>
-                            <li><strong>Typ:</strong> Tequila (Blanco)</li>
-                            <li><strong>Agáve:</strong> 100% Modrá Weber</li>
-                            <li><strong>Region:</strong> Jalisco, Mexiko (Konkrétní region se liší nebo nemusí být zdůrazněn)</li>
-                            <li><strong>Vaření:</strong> Pravděpodobně Autokláv (běžné pro cenově dostupné značky)</li>
-                            <li><strong>Extrakce:</strong> Pravděpodobně Válcový mlýn nebo Difuzér</li>
-                            <li><strong>Destilace:</strong> Pravděpodobně Kolonový nebo Kotlíkový destilační přístroj</li>
-                            <li><strong>Zrání:</strong> Nestařená</li>
-                            <li><strong>ABV:</strong> 40% (typické)</li>
-                        </ul>
-                        <h3>Prodejní Argumenty</h3>
-                        <ul>
-                            <li>Cenově dostupná 100% agávová varianta.</li>
-                            <li>Dobrá pro základní koktejly (Margaritas, Palomas), kde je důležitý rozpočet.</li>
-                            <li>Čistý profil agáve, možná s peprnými a citrusovými tóny.</li>
-                        </ul>
-                        <h3>Párování s Jídlem</h3>
-                        <p>Neformální mexická jídla, chipsy a salsa, základní tacos, vhodné pro míchání do nápojů podávaných s jídlem.</p>
-                         <div class="tags">
-                            <span class="tag tequila">Tequila</span> <span class="tag blanco">Blanco</span>
+                    <!-- Don Ramon Blanco -->
+                    <div class="spirit-card" data-category="blanco" id="don-ramon-blanco">
+                        <div class="spirit-content">
+                            <div class="card-header">
+                                <h3>Don Ramon Blanco</h3>
+                            </div>
+                            <div class="story-section">
+                                <h4>Příběh</h4>
+                                <p>Don Ramon Blanco je tradiční tequila vyráběná v malé palírně v Tequile. Je známá svou čistou chutí a výborným poměrem cena/kvalita, což ji činí ideální pro každodenní konzumaci.</p>
+                            </div>
+                            <div class="taste-profile-section">
+                                <h4>Chuťový profil</h4>
+                                <ul>
+                                    <li><strong>Vůně:</strong> Svěží agáve, citrusy</li>
+                                    <li><strong>Chuť:</strong> Jemná, čistá, s výraznou agáve</li>
+                                    <li><strong>Dozvuk:</strong> Krátký, čistý</li>
+                                </ul>
+                            </div>
+                            <div class="technical-section">
+                                <h4>Technické parametry</h4>
+                                <ul>
+                                    <li><strong>Typ:</strong> Blanco</li>
+                                    <li><strong>Obsah alkoholu:</strong> 40%</li>
+                                    <li><strong>Výrobní proces:</strong> Tradiční destilace</li>
+                                    <li><strong>Stárnutí:</strong> Nestařená</li>
+                                </ul>
+                            </div>
+                            <div class="pairing-suggestions">
+                                <h4>Doporučené párování</h4>
+                                <ul>
+                                    <li>Guacamole</li>
+                                    <li>Ceviche</li>
+                                    <li>Tacos</li>
+                                    <li>Lehké saláty</li>
+                                    <li>Mořské plody</li>
+                                </ul>
+                            </div>
+                            <div class="price-section">
+                                <h4>Cena</h4>
+                                <ul>
+                                    <li>129,–</li>
+                                </ul>
+                            </div>
                         </div>
                     </div>
-                </article>
 
-                <article class="spirit-card" id="card-ocho-blanco" data-brand="ocho">
-                    <div class="spirit-image">
-                        <img src="https://cdn.myshoptet.com/usr/eshop.angelshare.cz/user/shop/big/88455-1_muestra-ocho-no-8-cerro-del-gallo-2022.jpg?66a0cb4c" alt="Lahev Ocho Blanco">
-                    </div>
-                    <div class="spirit-content">
-                        <h2><a href="#" class="brand-link-internal" data-brand-target="ocho">Ocho</a> Blanco </h2>
-                        <h3>Příběh & Fakta</h3>
-                        <p>Vytvořeno Tomasem Estesem a Carlosem Camarenou (mistr lihovarník třetí generace). Ocho bylo průkopníkem konceptu "single estate" nebo "rancho único" tequily, zdůrazňující terroir jako víno. Každá ročníková sklizeň pochází z konkrétního pole, ukazující variace rok od roku a pole od pole. Ročník 2022 pochází z usedlosti "La Ladera".</p>
-                        <h3>Technické Parametry</h3>
-                        <ul>
-                            <li><strong>Typ:</strong> Tequila (Blanco)</li>
-                            <li><strong>Agáve:</strong> 100% Modrá Weber (Jedna usedlost: La Ladera pro 2022)</li>
-                            <li><strong>Region:</strong> Jalisco, Mexiko (Vysočiny - Arandas)</li>
-                            <li><strong>Vaření:</strong> Pomalu vařeno v Kamenných/cihlových pecích</li>
-                            <li><strong>Extrakce:</strong> Válcový mlýn</li>
-                            <li><strong>Fermentace:</strong> Dřevěné fermentační tanky (dodává charakter)</li>
-                            <li><strong>Destilace:</strong> Měděné kotlíkové destilační přístroje</li>
-                            <li><strong>Zrání:</strong> Nestařená</li>
-                            <li><strong>ABV:</strong> 40% (může se mírně lišit podle trhu)</li>
-                            <li><strong>Bez Aditiv:</strong> Ověřeno</li>
-                        </ul>
-                        <h3>Prodejní Argumenty</h3>
-                        <ul>
-                            <li>Ukazuje terroir – unikátní chuťový profil z konkrétního pole a roku.</li>
-                            <li>Vysoce respektováno znalci tequily pro tradiční metody a transparentnost.</li>
-                            <li>Komplexní Blanco: Tóny se liší podle ročníku, ale často zahrnují vařenou agáve, pepř, zeminu, mátu, citrusy, květinové náznaky.</li>
-                            <li>Vynikající k popíjení čisté pro ocenění nuancí.</li>
-                            <li>Bez aditiv, čistý výraz agáve.</li>
-                        </ul>
-                        <h3>Párování s Jídlem</h3>
-                        <p>Komplexní saláty, grilovaná zelenina, ceviche s bylinkami, kozí sýr, kuře s bylinkami.</p>
-                         <div class="tags">
-                            <span class="tag tequila">Tequila</span> <span class="tag blanco">Blanco</span> <span class="tag single-estate">Jedna usedlost</span> <span class="tag additive-free">Bez Aditiv</span> <span class="tag highlands">Vysočiny</span>
+                    <!-- Casamigos Reposado -->
+                    <div class="spirit-card" data-category="reposado" id="casamigos-reposado">
+                        <div class="spirit-content">
+                            <div class="card-header">
+                                <h3>Casamigos Reposado</h3>
+                            </div>
+                            <div class="story-section">
+                                <h4>Příběh</h4>
+                                <p>Casamigos Reposado je jemně stařená tequila, která kombinuje čistotu blanco s jemnými tóny dubu. Je známá svou přístupností a hladkou chutí, která ji činí ideální pro začátečníky i znalce.</p>
+                            </div>
+                            <div class="taste-profile-section">
+                                <h4>Chuťový profil</h4>
+                                <ul>
+                                    <li><strong>Vůně:</strong> Agáve, vanilka, dub, karamel</li>
+                                    <li><strong>Chuť:</strong> Jemná, sladká, s tóny vanilky a karamelu</li>
+                                    <li><strong>Dozvuk:</strong> Hladký, dřevitý</li>
+                                </ul>
+                            </div>
+                            <div class="technical-section">
+                                <h4>Technické parametry</h4>
+                                <ul>
+                                    <li><strong>Typ:</strong> Reposado</li>
+                                    <li><strong>Obsah alkoholu:</strong> 40%</li>
+                                    <li><strong>Výrobní proces:</strong> Moderní destilace</li>
+                                    <li><strong>Stárnutí:</strong> 7 měsíců v dubových sudech</li>
+                                </ul>
+                            </div>
+                            <div class="pairing-suggestions">
+                                <h4>Doporučené párování</h4>
+                                <ul>
+                                    <li>Grilované kuře</li>
+                                    <li>Carnitas</li>
+                                    <li>Bohatší ryby</li>
+                                    <li>Kukuřičné pokrmy</li>
+                                    <li>Krémové omáčky</li>
+                                </ul>
+                            </div>
+                            <div class="price-section">
+                                <h4>Cena</h4>
+                                <ul>
+                                    <li>185,–</li>
+                                </ul>
+                            </div>
                         </div>
                     </div>
-                </article>
 
-                <article class="spirit-card" id="card-arette-blanco" data-brand="arette">
-                    <div class="spirit-image">
-                         <img src="https://www.everythingwine.ca/media/catalog/product/3/3/336121_arette_blanco_tequila_700_ml.jpeg?quality=80&bg-color=255,255,255&fit=bounds&height=700&width=700&canvas=700:700" alt="Lahev Arette Blanco">
-                    </div>
-                    <div class="spirit-content">
-                        <h2><a href="#" class="brand-link-internal" data-brand-target="arette">Arette</a> Blanco (Suave)</h2>
-                        <h3>Příběh & Fakta</h3>
-                        <p>Vyráběno v lihovaru El Llano ve městě Tequila, provozovaném rodinou Orendain, jednou z nejstarších tequilových dynastií. Pojmenováno po slavném mexickém šampionovi v parkurovém skákání, koni "Arete". Známé kvalitou a hodnotou, často považováno za volbu zasvěcených v oboru.</p>
-                        <h3>Technické Parametry</h3>
-                        <ul>
-                            <li><strong>Typ:</strong> Tequila (Blanco)</li>
-                            <li><strong>Agáve:</strong> 100% Modrá Weber</li>
-                            <li><strong>Region:</strong> Jalisco, Mexiko (Nížiny - město Tequila)</li>
-                            <li><strong>Vaření:</strong> Autokláv</li>
-                            <li><strong>Extrakce:</strong> Válcový mlýn</li>
-                            <li><strong>Fermentace:</strong> Nerezové tanky</li>
-                            <li><strong>Destilace:</strong> Měděné kotlíkové destilační přístroje</li>
-                            <li><strong>Zrání:</strong> Nestařená</li>
-                            <li><strong>ABV:</strong> 40%</li>
-                        </ul>
-                        <h3>Prodejní Argumenty</h3>
-                        <ul>
-                            <li>Klasický profil Nížin: Zemité, bylinné, pepřové, minerální tóny vedle vařené agáve.</li>
-                            <li>Vynikající hodnota za dobře vyrobenou 100% agávovou tequilu.</li>
-                            <li>Skvělá "pracovní" tequila pro koktejly, ale dostatečně charakteristická k popíjení.</li>
-                            <li>Vyráběno respektovaným, historickým lihovarem.</li>
-                        </ul>
-                        <h3>Párování s Jídlem</h3>
-                        <p>Street tacos, grilované papriky a cibule, queso fundido, pozole.</p>
-                         <div class="tags">
-                            <span class="tag tequila">Tequila</span> <span class="tag blanco">Blanco</span> <span class="tag lowlands">Nížiny</span>
+                    <!-- Casamigos Anejo -->
+                    <div class="spirit-card" data-category="anejo" id="casamigos-anejo">
+                        <div class="spirit-content">
+                            <div class="card-header">
+                                <h3>Casamigos Añejo</h3>
+                            </div>
+                            <div class="story-section">
+                                <h4>Příběh</h4>
+                                <p>Casamigos Añejo je stařená tequila, která kombinuje tradiční výrobu s moderním přístupem. Jejich añejo je známý svou jemností a komplexitou, která vzniká dlouhým zráním v dubových sudech.</p>
+                            </div>
+                            <div class="taste-profile-section">
+                                <h4>Chuťový profil</h4>
+                                <ul>
+                                    <li><strong>Vůně:</strong> Karamel, vanilka, dub, čokoláda</li>
+                                    <li><strong>Chuť:</strong> Komplexní, jemná, s tóny karamelu a vanilky</li>
+                                    <li><strong>Dozvuk:</strong> Dlouhý, hedvábný</li>
+                                </ul>
+                            </div>
+                            <div class="technical-section">
+                                <h4>Technické parametry</h4>
+                                <ul>
+                                    <li><strong>Typ:</strong> Añejo</li>
+                                    <li><strong>Obsah alkoholu:</strong> 40%</li>
+                                    <li><strong>Výrobní proces:</strong> Moderní destilace</li>
+                                    <li><strong>Stárnutí:</strong> 14 měsíců v dubových sudech</li>
+                                </ul>
+                            </div>
+                            <div class="pairing-suggestions">
+                                <h4>Doporučené párování</h4>
+                                <ul>
+                                    <li>Grilované steaky</li>
+                                    <li>Čokoláda</li>
+                                    <li>Doutníky</li>
+                                    <li>Dezerty</li>
+                                </ul>
+                            </div>
+                            <div class="price-section">
+                                <h4>Cena</h4>
+                                <ul>
+                                    <li>195,–</li>
+                                </ul>
+                            </div>
                         </div>
                     </div>
-                </article>
 
-                <article class="spirit-card" id="card-arette-reposado" data-brand="arette">
-                    <div class="spirit-image">
-                        <img src="https://www.regionalwines.co.nz/cdn/shop/products/SS3141_fd6b0c4f-b714-44ec-ba94-dfd96aa17a35.jpg?v=1669154813" alt="Lahev Arette Reposado">
-                    </div>
-                    <div class="spirit-content">
-                        <h2><a href="#" class="brand-link-internal" data-brand-target="arette">Arette</a> Reposado (Suave)</h2>
-                         <h3>Příběh & Fakta</h3>
-                        <p>Stařený výraz klasické řady Arette, zachovávající charakter Nížin a přidávající jemný vliv dubu. Pokračuje v tradici kvality a hodnoty z lihovaru El Llano.</p>
-                        <h3>Technické Parametry</h3>
-                        <ul>
-                            <li><strong>Typ:</strong> Tequila (Reposado)</li>
-                            <li><strong>Agáve:</strong> 100% Modrá Weber</li>
-                            <li><strong>Region:</strong> Jalisco, Mexiko (Nížiny)</li>
-                            <li><strong>Vaření:</strong> Autokláv</li>
-                            <li><strong>Extrakce:</strong> Válcový mlýn</li>
-                            <li><strong>Destilace:</strong> Měděné kotlíkové destilační přístroje</li>
-                            <li><strong>Zrání:</strong> Přibl. 6 měsíců v sudech z amerického bílého dubu</li>
-                            <li><strong>ABV:</strong> 40%</li>
-                        </ul>
-                        <h3>Prodejní Argumenty</h3>
-                        <ul>
-                            <li>Dobře vyvážené Reposado, kde agáve stále prosvítá skrze dub.</li>
-                            <li>Tóny vařené agáve, lehkého karamelu, vanilky, pepře a bylin.</li>
-                            <li>Dobré vstupní Reposado nebo všestranný mixér.</li>
-                            <li>Dostupná kvalita od renomovaného výrobce.</li>
-                        </ul>
-                        <h3>Párování s Jídlem</h3>
-                        <p>Kuřecí enchiladas, vepřové carnitas, grilovaná zelenina, jemný čedar.</p>
-                         <div class="tags">
-                            <span class="tag tequila">Tequila</span> <span class="tag reposado">Reposado</span> <span class="tag lowlands">Nížiny</span>
+                    <!-- Cazcabel Coconut -->
+                    <div class="spirit-card" data-category="flavored" id="cazcabel-coconut">
+                        <div class="spirit-content">
+                            <div class="card-header">
+                                <h3>Cazcabel Coconut Tequila</h3>
+                            </div>
+                            <div class="story-section">
+                                <h4>Příběh</h4>
+                                <p>Cazcabel Coconut je ochucená tequila, která kombinuje tradiční blanco tequilu s přírodním kokosovým extraktem. Je ideální pro koktejly a míchané nápoje, přičemž si zachovává charakter tequily.</p>
+                            </div>
+                            <div class="taste-profile-section">
+                                <h4>Chuťový profil</h4>
+                                <ul>
+                                    <li><strong>Vůně:</strong> Kokos, agáve, vanilka</li>
+                                    <li><strong>Chuť:</strong> Sladká, kokosová, s jemnými tóny agáve</li>
+                                    <li><strong>Dozvuk:</strong> Středně dlouhý, kokosový</li>
+                                </ul>
+                            </div>
+                            <div class="technical-section">
+                                <h4>Technické parametry</h4>
+                                <ul>
+                                    <li><strong>Typ:</strong> Ochucená tequila</li>
+                                    <li><strong>Obsah alkoholu:</strong> 35%</li>
+                                    <li><strong>Výrobní proces:</strong> Infuze s přírodním kokosovým extraktem</li>
+                                    <li><strong>Stárnutí:</strong> Nestařená</li>
+                                </ul>
+                            </div>
+                            <div class="pairing-suggestions">
+                                <h4>Doporučené párování</h4>
+                                <ul>
+                                    <li>Tropické koktejly</li>
+                                    <li>Exotické dezerty</li>
+                                    <li>Kokosové pokrmy</li>
+                                    <li>Letní drinky</li>
+                                </ul>
+                            </div>
+                            <div class="price-section">
+                                <h4>Cena</h4>
+                                <ul>
+                                    <li>129,–</li>
+                                </ul>
+                            </div>
                         </div>
                     </div>
-                </article>
 
-                <article class="spirit-card" id="card-ltt-reposado" data-brand="los-tres-tonos">
-                    <div class="spirit-image">
-                        <img src="https://www.eshop.maneo.cz/pic_zbozi/11332.jpg" alt="Lahev Los Tres Tonos Reposado">
-                    </div>
-                    <div class="spirit-content">
-                        <h2><a href="#" class="brand-link-internal" data-brand-target="los-tres-tonos">Los Tres Tonos</a> Reposado</h2>
-                         <h3>Příběh & Fakta</h3>
-                        <p>Vyráběno v NOM 1456 (Tequilera Las Juntas). "Tres Tonos" odkazuje na tři tóny: agáve, dub a čas/proces. Cílem je harmonická rovnováha. Často chváleno pro svůj tradiční přístup a kvalitu v poměru k ceně.</p>
-                        <h3>Technické Parametry</h3>
-                        <ul>
-                            <li><strong>Typ:</strong> Tequila (Reposado)</li>
-                            <li><strong>Agáve:</strong> 100% Modrá Weber</li>
-                            <li><strong>Region:</strong> Jalisco, Mexiko (Pravděpodobně Nížiny nebo Přechodová zóna)</li>
-                            <li><strong>Vaření:</strong> Kamenné/cihlové pece</li>
-                            <li><strong>Extrakce:</strong> Válcový mlýn</li>
-                            <li><strong>Fermentace:</strong> Nerezové tanky</li>
-                            <li><strong>Destilace:</strong> Měděné kotlíkové destilační přístroje</li>
-                            <li><strong>Zrání:</strong> Zrálo v sudech z amerického dubu (doba typicky 6-8 měsíců)</li>
-                            <li><strong>ABV:</strong> 40%</li>
-                        </ul>
-                        <h3>Prodejní Argumenty</h3>
-                        <ul>
-                            <li>Dobře hodnocené, často "pod radarem" kvalitní Reposado.</li>
-                            <li>Vyvážený profil: Vařená agáve, vanilka, karamel, skořice, lehký pepř.</li>
-                            <li>Dobrá komplexnost pro popíjení nebo prémiové koktejly.</li>
-                            <li>Zdůrazňuje tradiční výrobní metody (cihlové pece).</li>
-                        </ul>
-                        <h3>Párování s Jídlem</h3>
-                        <p>Barbacoa tacos, vepřové kotlety s jablečnou omáčkou, pečené kuře, empanadas.</p>
-                         <div class="tags">
-                            <span class="tag tequila">Tequila</span> <span class="tag reposado">Reposado</span>
+                    <!-- Los Siete Misterios Doba-Yej -->
+                    <div class="spirit-card" data-category="mezcal" id="siete-misterios-doba-yej">
+                        <div class="spirit-content">
+                            <div class="card-header">
+                                <h3>Los Siete Misterios Doba-Yej</h3>
+                            </div>
+                            <div class="story-section">
+                                <h4>Příběh</h4>
+                                <p>Los Siete Misterios Doba-Yej je tradiční mezcal z Oaxacy, vyráběný z agáve Doba-Yej. Je známý svým komplexním charakterem a tradičním výrobním procesem, který zahrnuje pečení v zemi a destilaci v měděných kotlících.</p>
+                            </div>
+                            <div class="taste-profile-section">
+                                <h4>Chuťový profil</h4>
+                                <ul>
+                                    <li><strong>Vůně:</strong> Kouř, byliny, minerální tóny</li>
+                                    <li><strong>Chuť:</strong> Komplexní, zemitá, s výraznými kouřovými tóny</li>
+                                    <li><strong>Dozvuk:</strong> Dlouhý, minerální</li>
+                                </ul>
+                            </div>
+                            <div class="technical-section">
+                                <h4>Technické parametry</h4>
+                                <ul>
+                                    <li><strong>Typ:</strong> Mezcal Joven</li>
+                                    <li><strong>Obsah alkoholu:</strong> 45%</li>
+                                    <li><strong>Výrobní proces:</strong> Tradiční pečení v zemi</li>
+                                    <li><strong>Stárnutí:</strong> Nestařený</li>
+                                </ul>
+                            </div>
+                            <div class="pairing-suggestions">
+                                <h4>Doporučené párování</h4>
+                                <ul>
+                                    <li>Oaxacká kuchyně</li>
+                                    <li>Grilovaná masa</li>
+                                    <li>Pikantní jídla</li>
+                                    <li>Citrusové saláty</li>
+                                    <li>Tmavá čokoláda</li>
+                                </ul>
+                            </div>
+                            <div class="price-section">
+                                <h4>Cena</h4>
+                                <ul>
+                                    <li>209,–</li>
+                                </ul>
+                            </div>
                         </div>
                     </div>
-                </article>
 
-                <article class="spirit-card" id="card-herradura-blanco" data-brand="herradura">
-                    <div class="spirit-image">
-                        <img src="https://images.albertsons-media.com/is/image/ABS/189031308-C1N1?$ng-ecom-pdp-mobile$&defaultImage=Not_Available" alt="Lahev Herradura Blanco">
-                    </div>
-                    <div class="spirit-content">
-                         <h2><a href="#" class="brand-link-internal" data-brand-target="herradura">Herradura</a> Silver (Blanco)</h2>
-                         <h3>Příběh & Fakta</h3>
-                        <p>Herradura (což znamená "podkova," symbol štěstí) je jedním z nejstarších a nejrespektovanějších výrobců tequily, založeným v roce 1870. Nachází se v Hacienda San José del Refugio v Amatitánu. Proslulá používáním přirozené, divoké kvasinkové fermentace. Tvrdí, že jako první komerčně uvedli na trh Reposado.</p>
-                        <h3>Technické Parametry</h3>
-                        <ul>
-                            <li><strong>Typ:</strong> Tequila (Blanco/Silver)</li>
-                            <li><strong>Agáve:</strong> 100% Modrá Weber</li>
-                            <li><strong>Region:</strong> Jalisco, Mexiko (Nížiny - Amatitán)</li>
-                            <li><strong>Vaření:</strong> Kamenné/cihlové pece</li>
-                            <li><strong>Extrakce:</strong> Válcový mlýn</li>
-                            <li><strong>Fermentace:</strong> Nerezové tanky (otevřené, spoléhající na okolní kvasinky)</li>
-                            <li><strong>Destilace:</strong> Měděné kotlíkové destilační přístroje</li>
-                            <li><strong>Zrání:</strong> 45 dní v sudech z amerického bílého dubu (neobvyklé pro "Blanco," dodává lehkou hladkost/komplexnost)</li>
-                            <li><strong>ABV:</strong> 40%</li>
-                        </ul>
-                        <h3>Prodejní Argumenty</h3>
-                        <ul>
-                            <li>Lehce stařené "Blanco," nabízející unikátní hladkost a komplexnost.</li>
-                            <li>Výrazný profil díky divoké kvasinkové fermentaci: Vařená agáve, citrusy, zelené tóny, jemný náznak dubu/vanilky.</li>
-                            <li>Historická a autentická značka.</li>
-                            <li>Všestranná pro koktejly nebo popíjení.</li>
-                        </ul>
-                        <h3>Párování s Jídlem</h3>
-                        <p>Grilovaná ryba, krevetové koktejly, kuřecí fajitas, čerstvé sýry.</p>
-                         <div class="tags">
-                            <span class="tag tequila">Tequila</span> <span class="tag blanco">Blanco</span> <span class="tag lowlands">Nížiny</span> <span class="tag slightly-aged">Lehce stařená</span>
+                    <!-- Volcan Reposado -->
+                    <div class="spirit-card" data-category="reposado" id="volcan-reposado">
+                        <div class="spirit-content">
+                            <div class="card-header">
+                                <h3>Volcan Reposado</h3>
+                            </div>
+                            <div class="story-section">
+                                <h4>Příběh</h4>
+                                <p>Volcan Reposado je jemně stařená tequila, která kombinuje tradiční výrobu s moderním přístupem. Je známá svou vyváženou chutí a hladkým charakterem.</p>
+                            </div>
+                            <div class="taste-profile-section">
+                                <h4>Chuťový profil</h4>
+                                <ul>
+                                    <li><strong>Vůně:</strong> Agáve, vanilka, dub, karamel</li>
+                                    <li><strong>Chuť:</strong> Jemná, sladká, s tóny vanilky a karamelu</li>
+                                    <li><strong>Dozvuk:</strong> Hladký, dřevitý</li>
+                                </ul>
+                            </div>
+                            <div class="technical-section">
+                                <h4>Technické parametry</h4>
+                                <ul>
+                                    <li><strong>Typ:</strong> Reposado</li>
+                                    <li><strong>Obsah alkoholu:</strong> 40%</li>
+                                    <li><strong>Výrobní proces:</strong> Tradiční destilace</li>
+                                    <li><strong>Stárnutí:</strong> 6 měsíců v dubových sudech</li>
+                                </ul>
+                            </div>
+                            <div class="pairing-suggestions">
+                                <h4>Doporučené párování</h4>
+                                <ul>
+                                    <li>Grilované kuře</li>
+                                    <li>Carnitas</li>
+                                    <li>Bohatší ryby</li>
+                                    <li>Kukuřičné pokrmy</li>
+                                    <li>Krémové omáčky</li>
+                                </ul>
+                            </div>
+                            <div class="price-section">
+                                <h4>Cena</h4>
+                                <ul>
+                                    <li>179,–</li>
+                                </ul>
+                            </div>
                         </div>
                     </div>
-                </article>
 
-                <article class="spirit-card" id="card-herradura-reposado" data-brand="herradura">
-                    <div class="spirit-image">
-                        <img src="https://cdn.myshoptet.com/usr/www.idrinks.cz/user/shop/big/29856_uk-2021-herradura-reposado-70cl-se-eu-no-signature-10041575-transparerntbg.jpg?6740466c" alt="Lahev Herradura Reposado">
-                    </div>
-                    <div class="spirit-content">
-                        <h2><a href="#" class="brand-link-internal" data-brand-target="herradura">Herradura</a> Reposado</h2>
-                        <h3>Příběh & Fakta</h3>
-                        <p>Herradura tvrdí, že vynalezla kategorii Reposado v roce 1974. Tento výraz zraje déle než průmyslový standardní minimum.</p>
-                        <h3>Technické Parametry</h3>
-                        <ul>
-                            <li><strong>Typ:</strong> Tequila (Reposado)</li>
-                            <li><strong>Agáve:</strong> 100% Modrá Weber</li>
-                            <li><strong>Region:</strong> Jalisco, Mexiko (Nížiny)</li>
-                            <li><strong>Vaření:</strong> Kamenné/cihlové pece</li>
-                            <li><strong>Extrakce:</strong> Válcový mlýn</li>
-                            <li><strong>Fermentace:</strong> Nerezové tanky (divoké kvasinky)</li>
-                            <li><strong>Destilace:</strong> Měděné kotlíkové destilační přístroje</li>
-                            <li><strong>Zrání:</strong> 11 měsíců v sudech z amerického bílého dubu</li>
-                            <li><strong>ABV:</strong> 40%</li>
-                        </ul>
-                        <h3>Prodejní Argumenty</h3>
-                        <ul>
-                            <li>"Originální" Reposado, nastavující standard.</li>
-                            <li>Hladké a bohaté: Tóny vařené agáve, vanilky, másla, opáleného dubu, skořice, sušeného ovoce.</li>
-                            <li>Komplexnost díky divokým kvasinkám a prodlouženému zrání.</li>
-                            <li>Skvělé k popíjení, také vytváří robustní Margaritu nebo Palomu.</li>
-                        </ul>
-                        <h3>Párování s Jídlem</h3>
-                        <p>Carnitas, cochinita pibil, grilovaný losos, houbové pokrmy, polotvrdé sýry.</p>
-                         <div class="tags">
-                            <span class="tag tequila">Tequila</span> <span class="tag reposado">Reposado</span> <span class="tag lowlands">Nížiny</span> <span class="tag original-reposado">Původní Reposado</span>
+                    <!-- Don Julio Reposado -->
+                    <div class="spirit-card" data-category="reposado" id="don-julio-reposado">
+                        <div class="spirit-content">
+                            <div class="card-header">
+                                <h3>Don Julio Reposado</h3>
+                            </div>
+                            <div class="story-section">
+                                <h4>Příběh</h4>
+                                <p>Don Julio Reposado je ikonická tequila, která definuje standardy pro prémiové reposado tequily. Je známá svou jemností a komplexností, která vzniká pečlivým zráním v dubových sudech.</p>
+                            </div>
+                            <div class="taste-profile-section">
+                                <h4>Chuťový profil</h4>
+                                <ul>
+                                    <li><strong>Vůně:</strong> Agáve, vanilka, dub, karamel</li>
+                                    <li><strong>Chuť:</strong> Jemná, sladká, s tóny vanilky a karamelu</li>
+                                    <li><strong>Dozvuk:</strong> Hladký, dřevitý</li>
+                                </ul>
+                            </div>
+                            <div class="technical-section">
+                                <h4>Technické parametry</h4>
+                                <ul>
+                                    <li><strong>Typ:</strong> Reposado</li>
+                                    <li><strong>Obsah alkoholu:</strong> 40%</li>
+                                    <li><strong>Výrobní proces:</strong> Moderní destilace</li>
+                                    <li><strong>Stárnutí:</strong> 8 měsíců v dubových sudech</li>
+                                </ul>
+                            </div>
+                            <div class="pairing-suggestions">
+                                <h4>Doporučené párování</h4>
+                                <ul>
+                                    <li>Grilované kuře</li>
+                                    <li>Carnitas</li>
+                                    <li>Bohatší ryby</li>
+                                    <li>Kukuřičné pokrmy</li>
+                                    <li>Krémové omáčky</li>
+                                </ul>
+                            </div>
+                            <div class="price-section">
+                                <h4>Cena</h4>
+                                <ul>
+                                    <li>179,–</li>
+                                </ul>
+                            </div>
                         </div>
                     </div>
-                </article>
 
-                <article class="spirit-card" id="card-dramon-blanco" data-brand="don-ramon">
-                    <div class="spirit-image">
-                        <img src="https://cdnx.jumpseller.com/la-vinateria/image/43747319/thumb/1079/1079?1741188767" alt="Lahev Don Ramon Blanco">
-                    </div>
-                    <div class="spirit-content">
-                        <h2><a href="#" class="brand-link-internal" data-brand-target="don-ramon">Don Ramon</a> Plata (Blanco)</h2>
-                        <h3>Příběh & Fakta</h3>
-                        <p>Tequila Don Ramon je známá svými výraznými lahvemi ve stylu diamantového brusu a často se prezentuje jako moderní, hladká tequila. Pozicována jako prémiová značka s dostupnými výrazy.</p>
-                        <h3>Technické Parametry</h3>
-                        <ul>
-                            <li><strong>Typ:</strong> Tequila (Blanco/Plata)</li>
-                            <li><strong>Agáve:</strong> 100% Modrá Weber</li>
-                            <li><strong>Region:</strong> Jalisco, Mexiko</li>
-                            <li><strong>Vaření:</strong> Pravděpodobně Autokláv</li>
-                            <li><strong>Extrakce:</strong> Pravděpodobně Válcový mlýn nebo Difuzér</li>
-                            <li><strong>Destilace:</strong> Kotlíkový nebo Kolonový destilační přístroj</li>
-                            <li><strong>Zrání:</strong> Nestařená</li>
-                            <li><strong>ABV:</strong> 40%</li>
-                        </ul>
-                        <h3>Prodejní Argumenty</h3>
-                        <ul>
-                            <li>Výrazná prezentace lahve.</li>
-                            <li>Navrženo pro hladkost, často oslovuje nováčky v pití tequily.</li>
-                            <li>Čistý profil, vhodný pro koktejly a panáky.</li>
-                            <li>Tóny často popisované jako jemná agáve, citrusy, květinové náznaky.</li>
-                        </ul>
-                        <h3>Párování s Jídlem</h3>
-                        <p>Lehké předkrmy, chipsy a guacamole, jednoduché rybí tacos, ovocné mísy.</p>
-                         <div class="tags">
-                            <span class="tag tequila">Tequila</span> <span class="tag blanco">Blanco</span>
+                    <!-- Arette Reposado -->
+                    <div class="spirit-card" data-category="reposado" id="arette-reposado">
+                        <div class="spirit-content">
+                            <div class="card-header">
+                                <h3>Arette Reposado</h3>
+                            </div>
+                            <div class="story-section">
+                                <h4>Příběh</h4>
+                                <p>Arette Reposado je tradiční tequila vyráběná v malé palírně v Tequile. Je známá svou čistou chutí a výborným poměrem cena/kvalita.</p>
+                            </div>
+                            <div class="taste-profile-section">
+                                <h4>Chuťový profil</h4>
+                                <ul>
+                                    <li><strong>Vůně:</strong> Agáve, vanilka, dub</li>
+                                    <li><strong>Chuť:</strong> Jemná, čistá, s tóny vanilky</li>
+                                    <li><strong>Dozvuk:</strong> Středně dlouhý, dřevitý</li>
+                                </ul>
+                            </div>
+                            <div class="technical-section">
+                                <h4>Technické parametry</h4>
+                                <ul>
+                                    <li><strong>Typ:</strong> Reposado</li>
+                                    <li><strong>Obsah alkoholu:</strong> 40%</li>
+                                    <li><strong>Výrobní proces:</strong> Tradiční destilace</li>
+                                    <li><strong>Stárnutí:</strong> 6 měsíců v dubových sudech</li>
+                                </ul>
+                            </div>
+                            <div class="pairing-suggestions">
+                                <h4>Doporučené párování</h4>
+                                <ul>
+                                    <li>Grilované kuře</li>
+                                    <li>Carnitas</li>
+                                    <li>Bohatší ryby</li>
+                                    <li>Kukuřičné pokrmy</li>
+                                    <li>Krémové omáčky</li>
+                                </ul>
+                            </div>
+                            <div class="price-section">
+                                <h4>Cena</h4>
+                                <ul>
+                                    <li>399,–</li>
+                                </ul>
+                            </div>
                         </div>
                     </div>
-                </article>
 
-                <article class="spirit-card" id="card-dramon-cristalino" data-brand="don-ramon">
-                    <div class="spirit-image">
-                        <img src="https://www.emdrinks.cz/3127-thickbox_default/don-ramon-platinium-anejo-cristalino-70cl-alc-35.jpg" alt="Lahev Don Ramon Cristalino">
-                    </div>
-                    <div class="spirit-content">
-                         <h2><a href="#" class="brand-link-internal" data-brand-target="don-ramon">Don Ramon</a> Cristalino</h2>
-                         <h3>Příběh & Fakta</h3>
-                        <p>Využívá popularitu Cristalinos s charakteristickým stylem lahve Don Ramon. Často míchá různé stáří před filtrací, nebo začíná s Añejo základem. Zaměřuje se na hladký, přístupný stařený charakter bez barvy.</p>
-                        <h3>Technické Parametry</h3>
-                        <ul>
-                            <li><strong>Typ:</strong> Tequila (Cristalino)</li>
-                            <li><strong>Agáve:</strong> 100% Modrá Weber</li>
-                            <li><strong>Region:</strong> Jalisco, Mexiko</li>
-                            <li><strong>Zrání:</strong> Základ je stařený (Reposado/Añejo nebo směs), poté filtrováno dřevěným uhlím</li>
-                            <li><strong>ABV:</strong> 40%</li>
-                        </ul>
-                        <h3>Prodejní Argumenty</h3>
-                        <ul>
-                            <li>Vizuálně přitažlivý čirý destilát se stařenou komplexností.</li>
-                            <li>Velmi hladký, snadno pitelný profil.</li>
-                            <li>Dobré pro ty, kteří mají rádi myšlenku stařených destilátů, ale preferují čirý vzhled.</li>
-                            <li>Tóny vanilky, karamelu, lehkého ovoce, zjemněné agáve.</li>
-                        </ul>
-                        <h3>Párování s Jídlem</h3>
-                        <p>Grilovaná bílá ryba, hřebenatky, krémové těstoviny, kuře s lehkou smetanovou omáčkou.</p>
-                         <div class="tags">
-                            <span class="tag tequila">Tequila</span> <span class="tag cristalino">Cristalino</span>
+                    <!-- Los Tres Tonos Reposado -->
+                    <div class="spirit-card" data-category="reposado" id="ltt-reposado">
+                        <div class="spirit-content">
+                            <div class="card-header">
+                                <h3>Los Tres Tonos Reposado</h3>
+                            </div>
+                            <div class="story-section">
+                                <h4>Příběh</h4>
+                                <p>Los Tres Tonos Reposado je prémiová tequila, která kombinuje tradiční výrobu s moderním přístupem. Je známá svou komplexností a vyváženou chutí.</p>
+                            </div>
+                            <div class="taste-profile-section">
+                                <h4>Chuťový profil</h4>
+                                <ul>
+                                    <li><strong>Vůně:</strong> Agáve, vanilka, dub, karamel</li>
+                                    <li><strong>Chuť:</strong> Jemná, sladká, s tóny vanilky a karamelu</li>
+                                    <li><strong>Dozvuk:</strong> Hladký, dřevitý</li>
+                                </ul>
+                            </div>
+                            <div class="technical-section">
+                                <h4>Technické parametry</h4>
+                                <ul>
+                                    <li><strong>Typ:</strong> Reposado</li>
+                                    <li><strong>Obsah alkoholu:</strong> 40%</li>
+                                    <li><strong>Výrobní proces:</strong> Tradiční destilace</li>
+                                    <li><strong>Stárnutí:</strong> 6 měsíců v dubových sudech</li>
+                                </ul>
+                            </div>
+                            <div class="pairing-suggestions">
+                                <h4>Doporučené párování</h4>
+                                <ul>
+                                    <li>Grilované kuře</li>
+                                    <li>Carnitas</li>
+                                    <li>Bohatší ryby</li>
+                                    <li>Kukuřičné pokrmy</li>
+                                    <li>Krémové omáčky</li>
+                                </ul>
+                            </div>
+                            <div class="price-section">
+                                <h4>Cena</h4>
+                                <ul>
+                                    <li>159,–</li>
+                                </ul>
+                            </div>
                         </div>
                     </div>
-                </article>
 
-                <article class="spirit-card" id="card-gritona-reposado" data-brand="la-gritona">
-                    <div class="spirit-image">
-                        <img src="https://www.canadianliquorstore.ca/cdn/shop/products/863293_1024x1024.jpg?v=1707263686" alt="Lahev La Gritona Reposado">
-                    </div>
-                    <div class="spirit-content">
-                        <h2><a href="#" class="brand-link-internal" data-brand-target="la-gritona">La Gritona</a> Reposado</h2>
-                         <h3>Příběh & Fakta</h3>
-                        <p>Pozoruhodné tím, že je vyráběno v lihovaru (NOM 1533 - Valle de Guadalupe) provozovaném téměř výhradně ženami, vedeném Melly Cardenas. Zaměřuje se na lehčí styl Reposado, nechává vyniknout agáve. Používá recyklované sklo pro své výrazné lahve.</p>
-                        <h3>Technické Parametry</h3>
-                        <ul>
-                            <li><strong>Typ:</strong> Tequila (Reposado)</li>
-                            <li><strong>Agáve:</strong> 100% Modrá Weber (Zralá, Vysočiny)</li>
-                            <li><strong>Region:</strong> Jalisco, Mexiko (Vysočiny)</li>
-                            <li><strong>Vaření:</strong> Kamenné/cihlové pece (pomalu vařené)</li>
-                            <li><strong>Extrakce:</strong> Válcový mlýn</li>
-                            <li><strong>Fermentace:</strong> Nerezové tanky</li>
-                            <li><strong>Destilace:</strong> Měděné kotlíkové destilační přístroje</li>
-                            <li><strong>Zrání:</strong> 8 měsíců v znovu použitých sudech po americké whiskey (méně intenzivní dub)</li>
-                            <li><strong>ABV:</strong> 40%</li>
-                            <li><strong>Bez Aditiv:</strong> Věří se, že ano, zaměřuje se na přirozený proces.</li>
-                        </ul>
-                        <h3>Prodejní Argumenty</h3>
-                        <ul>
-                            <li>Lihovar vedený ženami, unikátní příběh.</li>
-                            <li>Udržitelný přístup (recyklované lahve).</li>
-                            <li>Vegetální, bylinný, agávově orientovaný profil Reposado, ne příliš dubový.</li>
-                            <li>"Crushable" - snadno se pije čistá nebo v koktejlech.</li>
-                            <li>Tóny vařené agáve, trávy, pepře, slanosti, velmi jemný dub/vanilka.</li>
-                        </ul>
-                        <h3>Párování s Jídlem</h3>
-                        <p>Vegetariánská jídla, rybí tacos, ceviche, saláty, lehká kuřecí jídla.</p>
-                         <div class="tags">
-                            <span class="tag tequila">Tequila</span> <span class="tag reposado">Reposado</span> <span class="tag highlands">Vysočiny</span> <span class="tag woman-led">Vedená ženami</span> <span class="tag additive-free">Bez Aditiv</span>
+                    <!-- La Gritona Reposado -->
+                    <div class="spirit-card" data-category="reposado" id="gritona-reposado">
+                        <div class="spirit-content">
+                            <div class="card-header">
+                                <h3>La Gritona Reposado</h3>
+                            </div>
+                            <div class="story-section">
+                                <h4>Příběh</h4>
+                                <p>La Gritona Reposado je tradiční tequila vyráběná v malé palírně v Tequile. Je známá svou čistou chutí a výborným poměrem cena/kvalita.</p>
+                            </div>
+                            <div class="taste-profile-section">
+                                <h4>Chuťový profil</h4>
+                                <ul>
+                                    <li><strong>Vůně:</strong> Agáve, vanilka, dub</li>
+                                    <li><strong>Chuť:</strong> Jemná, čistá, s tóny vanilky</li>
+                                    <li><strong>Dozvuk:</strong> Středně dlouhý, dřevitý</li>
+                                </ul>
+                            </div>
+                            <div class="technical-section">
+                                <h4>Technické parametry</h4>
+                                <ul>
+                                    <li><strong>Typ:</strong> Reposado</li>
+                                    <li><strong>Obsah alkoholu:</strong> 40%</li>
+                                    <li><strong>Výrobní proces:</strong> Tradiční destilace</li>
+                                    <li><strong>Stárnutí:</strong> 6 měsíců v dubových sudech</li>
+                                </ul>
+                            </div>
+                            <div class="pairing-suggestions">
+                                <h4>Doporučené párování</h4>
+                                <ul>
+                                    <li>Grilované kuře</li>
+                                    <li>Carnitas</li>
+                                    <li>Bohatší ryby</li>
+                                    <li>Kukuřičné pokrmy</li>
+                                    <li>Krémové omáčky</li>
+                                </ul>
+                            </div>
+                            <div class="price-section">
+                                <h4>Cena</h4>
+                                <ul>
+                                    <li>179,–</li>
+                                </ul>
+                            </div>
                         </div>
                     </div>
-                </article>
 
-                <article class="spirit-card" id="card-reycampero-espadin" data-brand="rey-campero">
-                    <div class="spirit-image">
-                        <img src="https://www.warehouse1.cz/variant/eshop/product-detail-microdata-1x1/edeeshop/warehouse1/product/hlavni-motiv/4016/3065_rey_campero_espadin.jpg" alt="Lahev Rey Campero Espadín">
-                    </div>
-                    <div class="spirit-content">
-                        <h2><a href="#" class="brand-link-internal" data-brand-target="rey-campero">Rey Campero</a> Espadín Mezcal</h2>
-                        <h3>Příběh & Fakta</h3>
-                        <p>Rey Campero ("Král venkova") je vysoce respektovaná značka řemeslného mezcalu z Candelaria Yegolé, Oaxaca. Provozuje ji rodina Sánchez, známá tradičními metodami a prací s divokými druhy agáve. Espadín je nejběžnější agáve používaná pro mezcal, ale Rey Campero je známý svou kvalitou.</p>
-                        <h3>Technické Parametry</h3>
-                        <ul>
-                            <li><strong>Typ:</strong> Mezcal (Artesanal - Řemeslný)</li>
-                            <li><strong>Agáve:</strong> 100% Espadín (Agave Angustifolia Haw)</li>
-                            <li><strong>Region:</strong> Candelaria Yegolé, Oaxaca, Mexiko</li>
-                            <li><strong>Vaření:</strong> Zemní pec (kónická, vytápěná dřevem)</li>
-                            <li><strong>Extrakce:</strong> Tahona (kamenné kolo, často tažené koněm)</li>
-                            <li><strong>Fermentace:</strong> Otevřené dřevěné kádě (borovice)</li>
-                            <li><strong>Destilace:</strong> Dvojitě destilováno v měděných kotlíkových destilačních přístrojích</li>
-                            <li><strong>Zrání:</strong> Nestařený (Joven)</li>
-                            <li><strong>ABV:</strong> Typicky vyšší, kolem 46-48%</li>
-                        </ul>
-                        <h3>Prodejní Argumenty</h3>
-                        <ul>
-                            <li>Autentický, tradičně vyrobený oaxacký mezcal.</li>
-                            <li>Komplexní chuťový profil: Pražená agáve, kouř (dobře integrovaný), tropické ovoce, byliny, zemina, minerály.</li>
-                            <li>Skvělý úvod do vysoce kvalitního řemeslného mezcalu.</li>
-                            <li>Vynikající k popíjení, také vytváří fenomenální koktejly (Mezcal Negroni, Oaxaca Old Fashioned).</li>
-                            <li>Reprezentuje terroir a řemeslo rodiny Sánchez.</li>
-                        </ul>
-                        <h3>Párování s Jídlem</h3>
-                        <p>Mole pokrmy, grilovaná masa, oaxacký sýr, pečená zelenina, citrusové/ovocné saláty s chilli.</p>
-                         <div class="tags">
-                            <span class="tag mezcal">Mezcal</span> <span class="tag espadin">Espadín</span> <span class="tag oaxaca">Oaxaca</span> <span class="tag artesanal">Řemeslný</span> <span class="tag tahona">Tahona</span>
+                    <!-- Don Julio Anejo -->
+                    <div class="spirit-card" data-category="anejo" id="don-julio-anejo">
+                        <div class="spirit-content">
+                            <div class="card-header">
+                                <h3>Don Julio Añejo</h3>
+                            </div>
+                            <div class="story-section">
+                                <h4>Příběh</h4>
+                                <p>Don Julio Añejo je ikonická tequila, která definuje standardy pro prémiové añejo tequily. Je známá svou komplexností a jemností, která vzniká dlouhým zráním v dubových sudech.</p>
+                            </div>
+                            <div class="taste-profile-section">
+                                <h4>Chuťový profil</h4>
+                                <ul>
+                                    <li><strong>Vůně:</strong> Karamel, vanilka, dub, čokoláda</li>
+                                    <li><strong>Chuť:</strong> Komplexní, jemná, s tóny karamelu a vanilky</li>
+                                    <li><strong>Dozvuk:</strong> Dlouhý, hedvábný</li>
+                                </ul>
+                            </div>
+                            <div class="technical-section">
+                                <h4>Technické parametry</h4>
+                                <ul>
+                                    <li><strong>Typ:</strong> Añejo</li>
+                                    <li><strong>Obsah alkoholu:</strong> 40%</li>
+                                    <li><strong>Výrobní proces:</strong> Moderní destilace</li>
+                                    <li><strong>Stárnutí:</strong> 18 měsíců v dubových sudech</li>
+                                </ul>
+                            </div>
+                            <div class="pairing-suggestions">
+                                <h4>Doporučené párování</h4>
+                                <ul>
+                                    <li>Grilované steaky</li>
+                                    <li>Čokoláda</li>
+                                    <li>Doutníky</li>
+                                    <li>Dezerty</li>
+                                </ul>
+                            </div>
+                            <div class="price-section">
+                                <h4>Cena</h4>
+                                <ul>
+                                    <li>209,–</li>
+                                </ul>
+                            </div>
                         </div>
                     </div>
-                </article>
 
-                <article class="spirit-card" id="card-sancosme-joven" data-brand="san-cosme">
-                    <div class="spirit-image">
-                        <img src="https://img-cdn.heureka.group/v1/80af88d4-ff56-4790-8dda-d7c9766f57f8.jpg?width=400&height=400" alt="Lahev San Cosme Joven">
-                    </div>
-                    <div class="spirit-content">
-                        <h2><a href="#" class="brand-link-internal" data-brand-target="san-cosme">San Cosme</a> Joven Mezcal</h2>
-                        <h3>Příběh & Fakta</h3>
-                        <p>Pojmenováno po svatém Kosmovi, patronovi lékařů. Prezentováno jako moderní, dostupný mezcal zaměřený částečně na koktejlový trh. Vyráběno v Santiago Matatlán, Oaxaca, často nazývaném "Světové hlavní město Mezcalu."</p>
-                        <h3>Technické Parametry</h3>
-                        <ul>
-                            <li><strong>Typ:</strong> Mezcal (Joven)</li>
-                            <li><strong>Agáve:</strong> 100% Espadín</li>
-                            <li><strong>Region:</strong> Santiago Matatlán, Oaxaca, Mexiko</li>
-                            <li><strong>Vaření:</strong> Zemní pec</li>
-                            <li><strong>Extrakce:</strong> Tahona</li>
-                            <li><strong>Fermentace:</strong> Dřevěné kádě</li>
-                            <li><strong>Destilace:</strong> Dvojitě destilováno v měděných kotlíkových destilačních přístrojích</li>
-                            <li><strong>Zrání:</strong> Nestařený</li>
-                            <li><strong>ABV:</strong> 40%</li>
-                        </ul>
-                        <h3>Prodejní Argumenty</h3>
-                        <ul>
-                            <li>Přístupný úvod do mezcalu, vyvážený kouř.</li>
-                            <li>Navrženo s ohledem na koktejly, dobře se míchá.</li>
-                            <li>Čistý profil s tóny vařené agáve, mírného kouře, citrusů a náznaky bylin.</li>
-                            <li>Dobrá hodnota za Espadín mezcal.</li>
-                        </ul>
-                        <h3>Párování s Jídlem</h3>
-                        <p>Pikantní jídla, tacos, grilovaný ananas, BBQ masa, předkrmy na bázi citrusů.</p>
-                         <div class="tags">
-                            <span class="tag mezcal">Mezcal</span> <span class="tag espadin">Espadín</span> <span class="tag oaxaca">Oaxaca</span> <span class="tag joven">Joven</span>
+                    <!-- Don Julio 1942 -->
+                    <div class="spirit-card" data-category="anejo" id="don-julio-1942">
+                        <div class="spirit-content">
+                            <div class="card-header">
+                                <h3>Don Julio 1942</h3>
+                            </div>
+                            <div class="story-section">
+                                <h4>Příběh</h4>
+                                <p>Don Julio 1942 je prémiová tequila, která vznikla na počest roku, kdy Don Julio González začal svou cestu v tequile. Je známá svou výjimečnou komplexností a luxusním charakterem.</p>
+                            </div>
+                            <div class="taste-profile-section">
+                                <h4>Chuťový profil</h4>
+                                <ul>
+                                    <li><strong>Vůně:</strong> Karamel, vanilka, dub, čokoláda, koření</li>
+                                    <li><strong>Chuť:</strong> Velmi komplexní, jemná, s tóny karamelu, vanilky a koření</li>
+                                    <li><strong>Dozvuk:</strong> Velmi dlouhý, hedvábný</li>
+                                </ul>
+                            </div>
+                            <div class="technical-section">
+                                <h4>Technické parametry</h4>
+                                <ul>
+                                    <li><strong>Typ:</strong> Extra Añejo</li>
+                                    <li><strong>Obsah alkoholu:</strong> 40%</li>
+                                    <li><strong>Výrobní proces:</strong> Moderní destilace</li>
+                                    <li><strong>Stárnutí:</strong> 2,5 roku v dubových sudech</li>
+                                </ul>
+                            </div>
+                            <div class="pairing-suggestions">
+                                <h4>Doporučené párování</h4>
+                                <ul>
+                                    <li>Grilované steaky</li>
+                                    <li>Čokoláda</li>
+                                    <li>Doutníky</li>
+                                    <li>Dezerty</li>
+                                </ul>
+                            </div>
+                            <div class="price-section">
+                                <h4>Cena</h4>
+                                <ul>
+                                    <li>399,–</li>
+                                </ul>
+                            </div>
                         </div>
                     </div>
-                </article>
 
-                <article class="spirit-card" id="card-ojodetigre-joven" data-brand="ojo-de-tigre">
-                    <div class="spirit-image">
-                        <img src="https://www.mezcalreviews.com/wp-content/uploads/2020/05/ojo-de-tigre-joven-mezcal.jpg" alt="Lahev Ojo de Tigre Joven">
-                    </div>
-                    <div class="spirit-content">
-                        <h2><a href="#" class="brand-link-internal" data-brand-target="ojo-de-tigre">Ojo de Tigre</a> Joven Mezcal</h2>
-                         <h3>Příběh & Fakta</h3>
-                        <p>Směs agáve Espadín z Oaxacy a agáve Tobalá z Puebly. "Ojo de Tigre" (Tygří oko) odkazuje na ochranný amulet. Spoluzakladatelem je mexický herec Luis Gerardo Méndez. Cílem je být lákavý, snadno pitelný mezcal.</p>
-                        <h3>Technické Parametry</h3>
-                        <ul>
-                            <li><strong>Typ:</strong> Mezcal (Joven)</li>
-                            <li><strong>Agáve:</strong> Směs Espadín (Oaxaca) & Tobalá (Puebla)</li>
-                            <li><strong>Region:</strong> Oaxaca & Puebla, Mexiko</li>
-                            <li><strong>Vaření:</strong> Zemní pec / Kónická pec</li>
-                            <li><strong>Extrakce:</strong> Tahona / Mlýn</li>
-                            <li><strong>Fermentace:</strong> Dřevěné kádě</li>
-                            <li><strong>Destilace:</strong> Měděné kotlíkové destilační přístroje</li>
-                            <li><strong>Zrání:</strong> Nestařený</li>
-                            <li><strong>ABV:</strong> 37-40% (často nižší ABV pro přístupnost)</li>
-                        </ul>
-                        <h3>Prodejní Argumenty</h3>
-                        <ul>
-                            <li>Unikátní směs pěstované agáve Espadín a divoké agáve Tobalá.</li>
-                            <li>Velmi přístupný, lehčí kouřový profil.</li>
-                            <li>Navrženo pro všestrannost při popíjení nebo v koktejlech.</li>
-                            <li>Tóny vařené agáve, lehkého kouře, ovoce (jablko/hruška), jemných bylin.</li>
-                            <li>Atraktivní lahev a spojení s celebritou.</li>
-                        </ul>
-                        <h3>Párování s Jídlem</h3>
-                        <p>Lehké saláty, mořské plody, čerstvé ovoce, jemné sýry, sushi.</p>
-                         <div class="tags">
-                            <span class="tag mezcal">Mezcal</span> <span class="tag espadin">Espadín</span> <span class="tag tobala">Tobalá</span> <span class="tag joven">Joven</span> <span class="tag blend">Směs</span>
+                    <!-- Volcan XA -->
+                    <div class="spirit-card" data-category="anejo" id="volcan-xa">
+                        <div class="spirit-content">
+                            <div class="card-header">
+                                <h3>Volcan XA</h3>
+                            </div>
+                            <div class="story-section">
+                                <h4>Příběh</h4>
+                                <p>Volcan XA je prémiová tequila, která kombinuje tradiční výrobu s moderním přístupem. Je známá svou komplexností a jemností, která vzniká dlouhým zráním v dubových sudech.</p>
+                            </div>
+                            <div class="taste-profile-section">
+                                <h4>Chuťový profil</h4>
+                                <ul>
+                                    <li><strong>Vůně:</strong> Karamel, vanilka, dub, čokoláda</li>
+                                    <li><strong>Chuť:</strong> Komplexní, jemná, s tóny karamelu a vanilky</li>
+                                    <li><strong>Dozvuk:</strong> Dlouhý, hedvábný</li>
+                                </ul>
+                            </div>
+                            <div class="technical-section">
+                                <h4>Technické parametry</h4>
+                                <ul>
+                                    <li><strong>Typ:</strong> Extra Añejo</li>
+                                    <li><strong>Obsah alkoholu:</strong> 40%</li>
+                                    <li><strong>Výrobní proces:</strong> Tradiční destilace</li>
+                                    <li><strong>Stárnutí:</strong> 3 roky v dubových sudech</li>
+                                </ul>
+                            </div>
+                            <div class="pairing-suggestions">
+                                <h4>Doporučené párování</h4>
+                                <ul>
+                                    <li>Grilované steaky</li>
+                                    <li>Čokoláda</li>
+                                    <li>Doutníky</li>
+                                    <li>Dezerty</li>
+                                </ul>
+                            </div>
+                            <div class="price-section">
+                                <h4>Cena</h4>
+                                <ul>
+                                    <li>399,–</li>
+                                </ul>
+                            </div>
                         </div>
                     </div>
-                </article>
 
-                <article class="spirit-card" id="card-delmaguey-vida" data-brand="del-maguey">
-                    <div class="spirit-image">
-                         <img src="https://cdn.myshoptet.com/usr/www.stramis.cz/user/shop/big/95301_del-maguey-vida.jpg?651ad355" alt="Lahev Del Maguey Vida">
-                    </div>
-                    <div class="spirit-content">
-                         <h2><a href="#" class="brand-link-internal" data-brand-target="del-maguey">Del Maguey</a> Vida Mezcal</h2>
-                         <h3>Příběh & Fakta</h3>
-                        <p>Del Maguey, založený Ronem Cooperem, byl průkopníkem konceptu mezcalu z jedné vesnice (single-village), přinášející řemeslný mezcal na mezinárodní scénu. Vida byla speciálně vytvořena jako vysoce kvalitní, cenově dostupný, míchatelný mezcal pro barmany. Vyráběno v San Luis Del Rio, Oaxaca.</p>
-                        <h3>Technické Parametry</h3>
-                        <ul>
-                            <li><strong>Typ:</strong> Mezcal (Artesanal - Řemeslný, Joven)</li>
-                            <li><strong>Agáve:</strong> 100% Espadín</li>
-                            <li><strong>Region:</strong> San Luis Del Rio, Oaxaca, Mexiko</li>
-                            <li><strong>Vaření:</strong> Zemní pec</li>
-                            <li><strong>Extrakce:</strong> Tahona</li>
-                            <li><strong>Fermentace:</strong> Otevřené dřevěné kádě</li>
-                            <li><strong>Destilace:</strong> Dvojitě destilováno v měděných kotlíkových destilačních přístrojích vytápěných dřevem</li>
-                            <li><strong>Zrání:</strong> Nestařený</li>
-                            <li><strong>ABV:</strong> 42%</li>
-                        </ul>
-                        <h3>Prodejní Argumenty</h3>
-                        <ul>
-                            <li>Standard řemeslného mezcalu pro koktejly.</li>
-                            <li>Vyvážený profil ovoce (zázvor, mandarinka), kouře (táborák), koření (skořice) a pražené agáve.</li>
-                            <li>Skvělá hodnota za tradičně vyrobený mezcal z jedné vesnice.</li>
-                            <li>Široce dostupný a uznávaný za barem.</li>
-                            <li>Od vysoce respektovaného výrobce zaměřeného na tradici a komunitu.</li>
-                        </ul>
-                        <h3>Párování s Jídlem</h3>
-                        <p>BBQ žebra, pikantní klobása, grilovaná kukuřice, komplexní oaxacká jídla, čokoláda s chilli.</p>
-                         <div class="tags">
-                            <span class="tag mezcal">Mezcal</span> <span class="tag espadin">Espadín</span> <span class="tag oaxaca">Oaxaca</span> <span class="tag artesanal">Řemeslný</span> <span class="tag single-village">Jedna vesnice</span>
+                    <!-- Volcan Cristalino -->
+                    <div class="spirit-card" data-category="cristalino" id="volcan-cristalino">
+                        <div class="spirit-content">
+                            <div class="card-header">
+                                <h3>Volcan Cristalino</h3>
+                            </div>
+                            <div class="story-section">
+                                <h4>Příběh</h4>
+                                <p>Volcan Cristalino je inovativní tequila, která kombinuje komplexnost stařené tequily s čirým vzhledem. Je známá svou jemností a unikátním charakterem.</p>
+                            </div>
+                            <div class="taste-profile-section">
+                                <h4>Chuťový profil</h4>
+                                <ul>
+                                    <li><strong>Vůně:</strong> Vanilka, karamel, citrusy</li>
+                                    <li><strong>Chuť:</strong> Jemná, sladká, s tóny vanilky a karamelu</li>
+                                    <li><strong>Dozvuk:</strong> Hladký, čistý</li>
+                                </ul>
+                            </div>
+                            <div class="technical-section">
+                                <h4>Technické parametry</h4>
+                                <ul>
+                                    <li><strong>Typ:</strong> Cristalino</li>
+                                    <li><strong>Obsah alkoholu:</strong> 40%</li>
+                                    <li><strong>Výrobní proces:</strong> Filtrace stařené tequily přes dřevěné uhlí</li>
+                                    <li><strong>Stárnutí:</strong> Kombinace Reposado a Añejo</li>
+                                </ul>
+                            </div>
+                            <div class="pairing-suggestions">
+                                <h4>Doporučené párování</h4>
+                                <ul>
+                                    <li>Grilované bílé ryby</li>
+                                    <li>Hřebenatky</li>
+                                    <li>Krémové omáčky</li>
+                                    <li>Lehké sýry</li>
+                                </ul>
+                            </div>
+                            <div class="price-section">
+                                <h4>Cena</h4>
+                                <ul>
+                                    <li>189,–</li>
+                                </ul>
+                            </div>
                         </div>
                     </div>
-                </article>
 
-                <article class="spirit-card" id="card-contraluz-cristalino" data-brand="contraluz">
-                    <div class="spirit-image">
-                        <img src="https://cdn.myshoptet.com/usr/www.pojdnapanaka.cz/user/shop/big/32976_contraluz-cristalino-36--0-7l.jpg?67d89e8a" alt="Lahev Contraluz Cristalino">
-                    </div>
-                    <div class="spirit-content">
-                        <h2><a href="#" class="brand-link-internal" data-brand-target="contraluz">Contraluz</a> Cristalino Mezcal</h2>
-                         <h3>Příběh & Fakta</h3>
-                        <p>Prezentováno jako první Cristalino Mezcal. Od stejné mateřské společnosti jako Don Julio (Diageo). Bere stařený (Reposado) Espadín mezcal a filtruje ho dřevěným uhlím, aby odstranil barvu, zatímco si zachovává některé stařené charakteristiky. Cílem je hladkost a přístupnost.</p>
-                        <h3>Technické Parametry</h3>
-                        <ul>
-                            <li><strong>Typ:</strong> Mezcal (Cristalino)</li>
-                            <li><strong>Agáve:</strong> 100% Espadín</li>
-                            <li><strong>Region:</strong> Oaxaca, Mexiko (pravděpodobně oblast Matatlán)</li>
-                            <li><strong>Vaření:</strong> Zemní pec</li>
-                            <li><strong>Extrakce:</strong> Tahona / Mlýn</li>
-                            <li><strong>Fermentace:</strong> Dřevo / Nerezová ocel</li>
-                            <li><strong>Destilace:</strong> Měděné kotlíkové destilační přístroje</li>
-                            <li><strong>Zrání:</strong> Stařený (přibl. 6 měsíců, úroveň Reposado), poté filtrováno dřevěným uhlím</li>
-                            <li><strong>ABV:</strong> 40%</li>
-                        </ul>
-                        <h3>Prodejní Argumenty</h3>
-                        <ul>
-                            <li>Průkopník kategorie Mezcal Cristalino.</li>
-                            <li>Kombinuje kouřové tóny agáve s hladšími, stařenými charakteristikami (vanilka, lehký karamel) bez barvy.</li>
-                            <li>Oslovuje pijáky hledající hladké destiláty s komplexností.</li>
-                            <li>Elegantní prezentace.</li>
-                        </ul>
-                        <h3>Párování s Jídlem</h3>
-                        <p>Uzený losos, grilované kuře s bylinkami, vepřový bůček, krémové sýry.</p>
-                         <div class="tags">
-                            <span class="tag mezcal">Mezcal</span> <span class="tag cristalino">Cristalino</span> <span class="tag espadin">Espadín</span> <span class="tag oaxaca">Oaxaca</span>
+                    <!-- Ojo de Tigre Joven -->
+                    <div class="spirit-card" data-category="mezcal" id="ojodetigre-joven">
+                        <div class="spirit-content">
+                            <div class="card-header">
+                                <h3>Ojo de Tigre Joven</h3>
+                            </div>
+                            <div class="story-section">
+                                <h4>Příběh</h4>
+                                <p>Ojo de Tigre Joven je tradiční mezcal z Oaxacy, vyráběný z agáve Espadín. Je známý svým komplexním charakterem a tradičním výrobním procesem.</p>
+                            </div>
+                            <div class="taste-profile-section">
+                                <h4>Chuťový profil</h4>
+                                <ul>
+                                    <li><strong>Vůně:</strong> Kouř, byliny, minerální tóny</li>
+                                    <li><strong>Chuť:</strong> Komplexní, zemitá, s výraznými kouřovými tóny</li>
+                                    <li><strong>Dozvuk:</strong> Dlouhý, minerální</li>
+                                </ul>
+                            </div>
+                            <div class="technical-section">
+                                <h4>Technické parametry</h4>
+                                <ul>
+                                    <li><strong>Typ:</strong> Mezcal Joven</li>
+                                    <li><strong>Obsah alkoholu:</strong> 45%</li>
+                                    <li><strong>Výrobní proces:</strong> Tradiční pečení v zemi</li>
+                                    <li><strong>Stárnutí:</strong> Nestařený</li>
+                                </ul>
+                            </div>
+                            <div class="pairing-suggestions">
+                                <h4>Doporučené párování</h4>
+                                <ul>
+                                    <li>Oaxacká kuchyně</li>
+                                    <li>Grilovaná masa</li>
+                                    <li>Pikantní jídla</li>
+                                    <li>Citrusové saláty</li>
+                                    <li>Tmavá čokoláda</li>
+                                </ul>
+                            </div>
+                            <div class="price-section">
+                                <h4>Cena</h4>
+                                <ul>
+                                    <li>129,–</li>
+                                </ul>
+                            </div>
                         </div>
                     </div>
-                </article>
 
-                <article class="spirit-card" id="card-quiereme-mucho" data-brand="quiereme-mucho">
-                    <div class="spirit-image">
-                        <img src="https://cdn11.bigcommerce.com/s-u9ww3di/images/stencil/1280x1280/products/7322/10263/QUIEREME_MUCHO_MEZCAL_3_set__98292.1505688883.jpg?c=2" alt="Lahev Quiéreme Mucho">
-                    </div>
-                    <div class="spirit-content">
-                        <h2><a href="#" class="brand-link-internal" data-brand-target="quiereme-mucho">Quiéreme Mucho</a> Mezcal</h2>
-                         <h3>Příběh & Fakta</h3>
-                        <p>"Quiéreme Mucho" znamená "Miluj mě hodně." Tato značka často představuje krásně ručně malované lahve ukazující mexické lidové umění. Typicky nabízejí různé výrazy z různých typů agáve a regionů v Oaxace, zdůrazňující umění a tradici. (Níže uvedené detaily jsou obecné, mohou se lišit podle konkrétního výrazu).</p>
-                        <h3>Technické Parametry</h3>
-                        <ul>
-                            <li><strong>Typ:</strong> Mezcal (Artesanal - Řemeslný, Joven - Typ závisí na lahvi)</li>
-                            <li><strong>Agáve:</strong> Různé (Espadín, Tobalá, Tepeztate atd.)</li>
-                            <li><strong>Region:</strong> Oaxaca, Mexiko (Konkrétní město se liší)</li>
-                            <li><strong>Vaření:</strong> Zemní pec</li>
-                            <li><strong>Extrakce:</strong> Tahona</li>
-                            <li><strong>Fermentace:</strong> Dřevěné kádě</li>
-                            <li><strong>Destilace:</strong> Měděné kotlíkové destilační přístroje</li>
-                            <li><strong>Zrání:</strong> Typicky Nestařený (Joven)</li>
-                            <li><strong>ABV:</strong> Různé, často 45%+</li>
-                        </ul>
-                        <h3>Prodejní Argumenty</h3>
-                        <ul>
-                            <li>Ohromující, unikátní ručně malované lahve - skvělý dárek nebo sběratelský kousek.</li>
-                            <li>Ukazuje rozmanité odrůdy agáve a oaxacký terroir.</li>
-                            <li>Reprezentuje tradiční, malosériovou výrobu mezcalu.</li>
-                            <li>Chuťové profily se velmi liší podle agáve - Espadín je ovocnější/kouřovější, Tobalá více květinová/minerální, Tepeztate intenzivně zelená/pikantní.</li>
-                            <li>Oslovuje nadšence mezcalu a milovníky umění.</li>
-                        </ul>
-                        <h3>Párování s Jídlem</h3>
-                        <p>Velmi se liší podle typu agáve. Espadín se páruje jako jiné Espadiny; Tobalá s lehčími jídly, mořskými plody, saláty; Tepeztate s odvážnými, pikantními nebo bylinnými pokrmy.</p>
-                         <div class="tags">
-                            <span class="tag mezcal">Mezcal</span> <span class="tag oaxaca">Oaxaca</span> <span class="tag artesanal">Řemeslný</span> <span class="tag art-bottle">Umělecká lahev</span>
+                    <!-- Quiereme Mucho -->
+                    <div class="spirit-card" data-category="mezcal" id="quiereme-mucho">
+                        <div class="spirit-content">
+                            <div class="card-header">
+                                <h3>Quiéreme Mucho</h3>
+                            </div>
+                            <div class="story-section">
+                                <h4>Příběh</h4>
+                                <p>Quiéreme Mucho je tradiční mezcal z Oaxacy, vyráběný z agáve Espadín. Je známý svým komplexním charakterem a tradičním výrobním procesem.</p>
+                            </div>
+                            <div class="taste-profile-section">
+                                <h4>Chuťový profil</h4>
+                                <ul>
+                                    <li><strong>Vůně:</strong> Kouř, byliny, minerální tóny</li>
+                                    <li><strong>Chuť:</strong> Komplexní, zemitá, s výraznými kouřovými tóny</li>
+                                    <li><strong>Dozvuk:</strong> Dlouhý, minerální</li>
+                                </ul>
+                            </div>
+                            <div class="technical-section">
+                                <h4>Technické parametry</h4>
+                                <ul>
+                                    <li><strong>Typ:</strong> Mezcal Joven</li>
+                                    <li><strong>Obsah alkoholu:</strong> 45%</li>
+                                    <li><strong>Výrobní proces:</strong> Tradiční pečení v zemi</li>
+                                    <li><strong>Stárnutí:</strong> Nestařený</li>
+                                </ul>
+                            </div>
+                            <div class="pairing-suggestions">
+                                <h4>Doporučené párování</h4>
+                                <ul>
+                                    <li>Oaxacká kuchyně</li>
+                                    <li>Grilovaná masa</li>
+                                    <li>Pikantní jídla</li>
+                                    <li>Citrusové saláty</li>
+                                    <li>Tmavá čokoláda</li>
+                                </ul>
+                            </div>
+                            <div class="price-section">
+                                <h4>Cena</h4>
+                                <ul>
+                                    <li>199,–</li>
+                                </ul>
+                            </div>
                         </div>
                     </div>
-                </article>
 
-                 <!-- --- End of spirit cards --- -->
+                    <!-- Contraluz Cristalino -->
+                    <div class="spirit-card" data-category="mezcal" id="contraluz-cristalino">
+                        <div class="spirit-content">
+                            <div class="card-header">
+                                <h3>Contraluz Cristalino</h3>
+                            </div>
+                            <div class="story-section">
+                                <h4>Příběh</h4>
+                                <p>Contraluz Cristalino je inovativní mezcal, který kombinuje komplexnost stařeného mezcalu s čirým vzhledem. Je známý svým jemným charakterem a unikátním profilem.</p>
+                            </div>
+                            <div class="taste-profile-section">
+                                <h4>Chuťový profil</h4>
+                                <ul>
+                                    <li><strong>Vůně:</strong> Vanilka, karamel, jemný kouř</li>
+                                    <li><strong>Chuť:</strong> Jemná, sladká, s tóny vanilky a karamelu</li>
+                                    <li><strong>Dozvuk:</strong> Hladký, čistý</li>
+                                </ul>
+                            </div>
+                            <div class="technical-section">
+                                <h4>Technické parametry</h4>
+                                <ul>
+                                    <li><strong>Typ:</strong> Mezcal Cristalino</li>
+                                    <li><strong>Obsah alkoholu:</strong> 40%</li>
+                                    <li><strong>Výrobní proces:</strong> Filtrace stařeného mezcalu přes dřevěné uhlí</li>
+                                    <li><strong>Stárnutí:</strong> Kombinace Reposado a Añejo</li>
+                                </ul>
+                            </div>
+                            <div class="pairing-suggestions">
+                                <h4>Doporučené párování</h4>
+                                <ul>
+                                    <li>Grilované bílé ryby</li>
+                                    <li>Hřebenatky</li>
+                                    <li>Krémové omáčky</li>
+                                    <li>Lehké sýry</li>
+                                </ul>
+                            </div>
+                            <div class="price-section">
+                                <h4>Cena</h4>
+                                <ul>
+                                    <li>189,–</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
-            </div> <!-- Konec spirits-container -->
         </main>
 
-    </div> <!-- Konec page-container -->
+    </div>
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
@@ -1283,8 +1400,11 @@
             const spiritsContainer = document.querySelector('.spirits-container');
             const menuToggle = document.getElementById('menu-toggle');
             const body = document.body;
-            const allCards = spiritsContainer.querySelectorAll('.spirit-card'); // Cache all cards
-            const brandTitleDisplay = document.getElementById('brand-title-display'); // Cache brand title element
+            const allCards = spiritsContainer.querySelectorAll('.spirit-card');
+            const brandTitleDisplay = document.getElementById('brand-title-display');
+            const summaryInfo = document.querySelector('.summary-info');
+            const categoriesInfo = document.querySelector('.categories-info');
+            const mainHeaderTitle = document.getElementById('main-header-title');
 
             // --- Function to set the main content view ---
             const setView = (viewName) => {
@@ -1295,8 +1415,51 @@
                 // Reset card visibility states
                 allCards.forEach(card => card.classList.remove('visible', 'brand-visible'));
 
+                // Hide both info sections by default
+                summaryInfo.style.display = 'none';
+                categoriesInfo.style.display = 'none';
+
+                // Show appropriate info section and update header
+                if (viewName === 'info-view') {
+                    summaryInfo.style.display = 'block';
+                    mainHeaderTitle.textContent = 'Shrnutí Agávových Destilátů';
+                    mainHeaderTitle.style.display = 'block';
+                    document.getElementById('all-bottles-title').style.display = 'none';
+                    brandTitleDisplay.style.display = 'none';
+                    document.querySelector('.bottles-grid').style.display = 'none';
+                    document.querySelector('.spirit-cards-container').style.display = 'none';
+                } else if (viewName === 'all-bottles-view') {
+                    document.querySelector('.bottles-grid').style.display = 'grid';
+                    document.querySelector('.spirit-cards-container').style.display = 'none';
+                    document.getElementById('all-bottles-title').style.display = 'block';
+                    mainHeaderTitle.style.display = 'none';
+                    brandTitleDisplay.style.display = 'none';
+                } else if (viewName === 'single-bottle-view') {
+                    document.querySelector('.bottles-grid').style.display = 'none';
+                    document.querySelector('.spirit-cards-container').style.display = 'block';
+                    document.getElementById('all-bottles-title').style.display = 'none';
+                    mainHeaderTitle.style.display = 'block';
+                    brandTitleDisplay.style.display = 'block';
+                }
+
                 // Scroll main content to top smoothly on view change
                 mainContent.scrollTo({ top: 0, behavior: 'smooth' });
+            };
+
+            // --- Function to show a specific spirit card ---
+            const showSpiritCard = (cardId) => {
+                const targetCard = document.getElementById(cardId);
+                if (targetCard) {
+                    setView('single-bottle-view');
+                    targetCard.classList.add('visible');
+                    // Hide the corresponding bottle square header
+                    const bottleSquare = document.querySelector(`.bottle-square[data-target="${cardId}"]`);
+                    if (bottleSquare) {
+                        bottleSquare.style.display = 'none';
+                    }
+                    brandTitleDisplay.textContent = targetCard.querySelector('.card-header h3').textContent;
+                    closeMobileSidebar();
+                }
             };
 
             // --- Function to close mobile sidebar ---
@@ -1322,39 +1485,87 @@
 
                 // Category Expansion
                 if (target.classList.contains('category-name')) {
+                    // Close all other categories first
+                    const allCategories = document.querySelectorAll('.category-name');
+                    allCategories.forEach(category => {
+                        if (category !== target) {
+                            category.closest('li')?.classList.remove('expanded');
+                        }
+                    });
+                    // Toggle the clicked category
                     target.closest('li')?.classList.toggle('expanded');
                 }
                 // Bottle Link Click
-                else if (target.classList.contains('bottle-link') && target.dataset.target) {
+                else if (target.classList.contains('bottle-link')) {
                     event.preventDefault();
-                    const targetCard = document.getElementById(target.dataset.target);
-                    if (targetCard) {
+                    const cardId = target.dataset.target;
+                    if (cardId) {
                         setView('single-bottle-view');
-                        targetCard.classList.add('visible');
+                        const targetCard = document.getElementById(cardId);
+                        if (targetCard) {
+                            allCards.forEach(card => card.classList.remove('visible'));
+                            targetCard.classList.add('visible');
+                            brandTitleDisplay.textContent = targetCard.querySelector('.card-header h3').textContent;
+                            document.querySelector('.spirit-cards-container').style.display = 'block';
+                        }
                         closeMobileSidebar();
                     }
                 }
                 // Show Summary Click
-                 else if (target.id === 'show-summary') {
-                     event.preventDefault();
-                     setView('info-view');
-                     closeMobileSidebar();
-                 }
+                else if (target.id === 'show-summary') {
+                    event.preventDefault();
+                    setView('info-view');
+                    summaryInfo.style.display = 'block';
+                    categoriesInfo.style.display = 'none';
+                    mainHeaderTitle.textContent = 'Shrnutí Agávových Destilátů';
+                    closeMobileSidebar();
+                }
+                // Show Categories Click
+                else if (target.id === 'show-categories') {
+                    event.preventDefault();
+                    setView('info-view');
+                    summaryInfo.style.display = 'none';
+                    categoriesInfo.style.display = 'block';
+                    mainHeaderTitle.textContent = 'Kategorie Agávových Destilátů';
+                    closeMobileSidebar();
+                }
                 // Show All Bottles Click
-                 else if (target.id === 'show-all-bottles') {
-                     event.preventDefault();
-                     setView('all-bottles-view');
-                     closeMobileSidebar();
-                 }
+                else if (target.id === 'show-all-bottles') {
+                    event.preventDefault();
+                    setView('all-bottles-view');
+                    allCards.forEach(card => card.classList.add('visible'));
+                    document.getElementById('all-bottles-title').style.display = 'block';
+                    mainHeaderTitle.style.display = 'none';
+                    brandTitleDisplay.style.display = 'none';
+                    closeMobileSidebar();
+                }
             });
 
-             // --- Main Content Interaction (using event delegation) ---
+            // --- Main Content Interaction (using event delegation) ---
             mainContent.addEventListener('click', (event) => {
                 const target = event.target;
+                const bottleSquare = target.closest('.bottle-square');
                 const brandLink = target.closest('.brand-link-internal');
 
+                // Bottle Square Click
+                if (bottleSquare) {
+                    event.preventDefault();
+                    const cardId = bottleSquare.dataset.target;
+                    if (cardId) {
+                        setView('single-bottle-view');
+                        const targetCard = document.getElementById(cardId);
+                        if (targetCard) {
+                            allCards.forEach(card => card.classList.remove('visible'));
+                            targetCard.classList.add('visible');
+                            brandTitleDisplay.textContent = targetCard.querySelector('.card-header h3').textContent;
+                            document.getElementById('all-bottles-title').style.display = 'none';
+                            mainHeaderTitle.style.display = 'block';
+                            brandTitleDisplay.style.display = 'block';
+                        }
+                    }
+                }
                 // Internal Brand Link Click
-                if (brandLink && brandLink.dataset.brandTarget && brandTitleDisplay) {
+                else if (brandLink && brandLink.dataset.brandTarget && brandTitleDisplay) {
                     event.preventDefault();
                     const targetBrand = brandLink.dataset.brandTarget;
                     const brandName = brandLink.textContent.trim(); // Get brand name
